@@ -1,36 +1,35 @@
 import './App.css';
-import { Admin } from './components/Admin';
-import { Navbar } from './components/Navbar';
-import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
-  Link,
 } from "react-router-dom";
-import { NewBoard } from './components/NewBoard';
-import { Experts } from './components/Experts';
-import { HomPage } from './pages/HomPage';
-import { ExpertsProfile } from './components/ExpertsProfile';
-
+import { HomPage } from './admin_pages/HomPage';
+import { ExpertHomPage } from './expert_pages/ExpertHomePage';
+import { NewBoardPage } from './admin_pages/NewBoardPage';
+import { ExpertPage } from './admin_pages/ExpertPage';
+import { ExpertProfilePage } from './admin_pages/ExpertProfilePage';
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/admin/homepage",
     element: (
       <HomPage></HomPage>
     ),
   },
   {
-    path: "/newboard",
-    element: <Navbar><NewBoard></NewBoard></Navbar>,
+    path: "/admin/newboard",
+    element: <NewBoardPage></NewBoardPage>,
   },
   {
-    path: "/experts",
-    element:<Navbar> <Experts/></Navbar>,
+    path: "/admin/schedule-boards",
+    element: <ExpertPage/>,
   },
   {
-    path: "/experts-profile",
-    element:<Navbar> <ExpertsProfile/></Navbar>,
+    path: "/admin/experts-profile",
+    element: <ExpertProfilePage/>,
+  },
+  {
+    path: "/expert/homepage",
+    element:<ExpertHomPage></ExpertHomPage>
   },
 ]);
 

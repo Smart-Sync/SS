@@ -11,10 +11,10 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Create New Board", href: "/newboard", current: false },
+  { name: "Home", href: "/admin/homepage", current: true },
+  { name: "Create New Board", href: "/admin/newboard", current: false },
   { name: "Modify Existing Board", href: "#", current: false },
-  { name: "View Expert Profile", href: "/experts-profile", current: false },
+  { name: "View Expert Profile", href: "/admin/experts-profile", current: false },
 ];
 
 function classNames(...classes) {
