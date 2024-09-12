@@ -7,8 +7,15 @@ import { HomPage } from './admin_pages/HomPage';
 import { ExpertHomPage } from './expert_pages/ExpertHomePage';
 import { NewBoardPage } from './admin_pages/NewBoardPage';
 import { ExpertPage } from './admin_pages/ExpertPage';
-import { ExpertProfilePage } from './admin_pages/ExpertProfilePage';
+import { ExpertsProfilePage } from './admin_pages/ExpertsProfilePage';
+import ExpertProfilePage from './expert_pages/ExpertProfilePage';
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <div>Hello</div>
+    ),
+  },
   {
     path: "/admin/homepage",
     element: (
@@ -25,11 +32,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/experts-profile",
-    element: <ExpertProfilePage/>,
+    element: <ExpertsProfilePage/>,
   },
   {
     path: "/expert/homepage",
     element:<ExpertHomPage></ExpertHomPage>
+  },
+  {
+    path: "/expert/expert-profile",
+    element:<ExpertProfilePage></ExpertProfilePage>
   },
 ]);
 
