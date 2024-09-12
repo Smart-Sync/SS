@@ -3,7 +3,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 const ExpertProfile = () => {
   return (
-    <div className="p-6 bg-white rounded-xl shadow-md space-y-4 max-w-md mx-auto">
+    <div className=" bg-gray-100 flex justify-center items-center">
+    <div className="p-6 bg-white rounded-xl w-full shadow-md space-y-4 max-w-md mx-auto">
       {/* Profile Picture */}
       <div className="flex justify-center">
         <img
@@ -92,6 +93,7 @@ const ExpertProfile = () => {
           </button>
         </Link>
       </div>
+    </div>
     </div>
   );
 };
