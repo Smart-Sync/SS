@@ -9,6 +9,7 @@ import { NewBoardPage } from './admin_pages/NewBoardPage';
 import { ExpertPage } from './admin_pages/ExpertPage';
 import { ExpertsProfilePage } from './admin_pages/ExpertsProfilePage';
 import ExpertProfilePage from './expert_pages/ExpertProfilePage';
+import { ExpertDashboard } from './experts_components/ExpertDashboard';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
     path: "/expert/expert-profile",
     element:<ExpertProfilePage></ExpertProfilePage>
   },
+  
 ]);
 
 function App() {
