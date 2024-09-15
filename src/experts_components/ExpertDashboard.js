@@ -1,40 +1,63 @@
-import React from 'react'
-
+import React from 'react';
+import imge from '../asset/sih.png';
+import Carousel from './Carousel.jsx';
+import Agenda from './Agenda.js';
 export const ExpertDashboard = () => {
   return (
-    <div> <div class="container mx-auto p-6">
-   
-    <div class="bg-white shadow rounded-lg p-4 flex justify-between items-center">
-        <div class="flex items-center">
-            
-            <div class="w-16 h-16 rounded-full bg-gray-300 mr-4"></div>
-            <div>
-                <h2 class="text-xl font-semibold">Expert Dashboard</h2>
-                <p class="text-gray-500">Interview Invitations</p>
-            </div>
-        </div>
-        <div>
-            <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      >Notifications</button>
-        </div>
-    </div>
-
- 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        
-        <div class="bg-white shadow rounded-lg p-6">
-            <h3 class="text-lg font-semibold mb-4">Board Invitation</h3>
-            <p class="text-gray-500 mb-4">Date: 2024-09-12 | Time: 90 mins</p>
-            <div class="flex justify-between">
-                <button class="bg-green-500 text-white py-2 px-4 rounded">Accept</button>
-                <button class="bg-red-500 text-white py-2 px-4 rounded">Cancel</button>
-            </div>
+    <div className="container mx-auto p-6">
+      {/* Profile Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Profile Picture and Name */}
+        <div className="bg-white shadow-md p-0 rounded-lg flex flex-col items-center justify-center h-58">
+          <img
+            src={imge}
+            alt="Profile"
+            className="w-32 h-32 rounded-full mb-4"
+          />
+          <h2 className="text-lg font-semibold">Dr. Kamala Sharma </h2>
         </div>
 
+        {/* Board Section (Accept/Reject Buttons) */}
+        <div className="col-span-2 h-auto">
+         <Carousel className="h-full" />
+        </div>
+
+        {/* Upcoming Interviews Section */}
         
-        <div class="bg-white shadow rounded-lg p-6">
-            <h3 class="text-lg font-semibold mb-4">Statistics</h3>
-            <ul class="space-y-2">
+      </div>
+      <div className="bg-white shadow-md p-6 rounded-lg mt-6 lg:mt-6">
+  <h3 className="text-xl font-semibold mb-4">Upcoming Interviews</h3>
+     <Agenda/>
+  {/* Make this part scrollable */}
+  {/* <ul className="max-h-32 overflow-y-auto">
+  <li className="border-b py-2">
+    Interview 1 - <span className="ml-10">Date & Time</span>
+  </li>
+  <li className="border-b py-2">
+    Interview 2 - <span className="ml-4">Date & Time</span>
+  </li>
+  <li className="border-b py-2">
+    Interview 3 - <span className="ml-4">Date & Time</span>
+  </li>
+  <li className="border-b py-2">
+    Interview 4 - <span className="ml-4">Date & Time</span>
+  </li>
+  <li className="border-b py-2">
+    Interview 5 - <span className="ml-4">Date & Time</span>
+  </li>
+  <li className="border-b py-2">
+    Interview 6 - <span className="ml-4">Date & Time</span>
+  </li>
+</ul> */}
+
+</div>
+
+      {/* Stats and Feedbacks Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* Stats */}
+        <div className="bg-white shadow-md p-6 rounded-lg">
+        <h3 class="text-lg font-semibold mb-4">Statistics</h3>
+            <ul class="space-y-3">
                 <li class="flex justify-between">
                     <span>Total Invitations</span>
                     <span class="text-red-500">21</span>
@@ -47,45 +70,42 @@ export const ExpertDashboard = () => {
                     <span>Past Interviews</span>
                     <span class="text-red-500">20</span>
                 </li>
+                <li class="flex justify-between">
+                    <span>Interview Invitations</span>
+                    <span class="text-red-500">20</span>
+                </li>
             </ul>
         </div>
-    </div>
 
-   
-    <div class="bg-white shadow rounded-lg p-6 mt-6">
-        <h3 class="text-lg font-semibold mb-4">Availability with in a Week</h3>
-        <div class="grid grid-cols-5 gap-4">
-            <div>
-                <p class="font-semibold">Mon</p>
-                <p>2-3 PM</p>
-            </div>
-            <div>
-                <p class="font-semibold">Tue</p>
-                <p>2-3 PM</p>
-            </div>
-            <div>
-                <p class="font-semibold">Wed</p>
-                <p>2-3 PM</p>
-            </div>
-            <div>
-                <p class="font-semibold">Thu</p>
-                <p>2-3 PM</p>
-            </div>
-            <div>
-                <p class="font-semibold">Fri</p>
-                <p>2-3 PM</p>
-            </div>
-        </div>
-    </div>
-
+        {/* Feedbacks */}
+        <div className="bg-white shadow-md p-6 rounded-lg">
+          {/* Form to add new feedback */}
+          <h3 className="text-xl font-semibold mb-4">Feedbacks</h3>
+  <form className="mt-4">
+    <label htmlFor="feedback" className="block text-sm font-medium mb-2">
+      Enter your feedback:
+    </label>
     
-    <div class="bg-white shadow rounded-lg p-6 mt-6">
-        <h3 class="text-lg font-semibold mb-4">Past Interviews & Feedback</h3>
-       
+    {/* Feedback input box */}
+    <textarea
+      id="feedback"
+      rows="4"
+      className="w-full border border-gray-300 rounded-md p-2"
+      placeholder="Write your feedback here..."
+    ></textarea>
+
+    {/* Submit button */}
+    <button
+      type="submit"
+      className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+    >
+      Submit Feedback
+    </button>
+  </form>
+        </div>
+      </div>
     </div>
-</div>
-</div>
-  )
-}
+  );
+};
 
-
+export default ExpertDashboard;

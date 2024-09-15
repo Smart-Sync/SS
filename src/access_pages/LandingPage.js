@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
+import Footer from '../footer/Footer'
 
 const navigation = [
   { name: 'About', href: '#' },
@@ -159,6 +160,7 @@ export const LandingPage = () => {
             />
           </div>
         </div>
+        <Footer/>
       </div>
     )
 }
