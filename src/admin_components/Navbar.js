@@ -7,9 +7,10 @@ import {
   MenuButton,
   MenuItem,
   MenuItems,
+  Button,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 const navigation = [
   { name: "Home", href: "/admin/homepage", current: true },
   { name: "Create New Board", href: "/admin/newboard", current: false },
@@ -21,7 +22,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
+
 export const Navbar = ({ children }) => {
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem("authToken");
+    navigate("/");
+  };
   return (
     <div>
       <Disclosure as="nav" className="bg-gray-800">
@@ -114,12 +122,12 @@ export const Navbar = ({ children }) => {
                     </a>
                   </MenuItem>
                   <MenuItem>
-                    <a
-                      href="#"
+                    <Button
+                      onClick = {handleLogOut}
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                     >
                       Sign out
-                    </a>
+                    </Button>
                   </MenuItem>
                 </MenuItems>
               </Menu>

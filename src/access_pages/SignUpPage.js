@@ -1,9 +1,33 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React , {useState}from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 export const SignUpPage = () => {
+    const [credentials, setCredentials] = useState({name:"",email:"",password:"", geolocation:""})
+   
+    const handleSubmit = async(e)=>{
+        e.preventDefault();
+        const response = await fetch('http://localhost:5000/api/createuser',
+           { method:"POST",
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({name:credentials.name,email:credentials.email,password:credentials.password,location:credentials.geolocation,})
+
+        }
+        )
+        const json = await response.json()
+        console.log(json);
+        if(!json.success){
+          alert("Enter valid credentials")
+        }
+
+    }
+    const handleInptChange = (event)=>{
+        setCredentials({...credentials,[event.target.name]:event.target.value})
+    }
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <>
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       <img
         alt="Your Company"
@@ -16,63 +40,32 @@ export const SignUpPage = () => {
     </div>
 
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form action="#" method="POST" className="space-y-6">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-            Email address
-          </label>
-          <div className="mt-2">
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between">
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-              Password
-            </label>
-            <div className="text-sm">
-              <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                Forgot password?
-              </a>
-            </div>
-          </div>
-          <div className="mt-2">
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-
-        <div>
-          <button
-            type="submit"
-            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Sign Up
-          </button>
-        </div>
-      </form>
-
-      <p className="mt-10 text-center text-sm text-gray-500">
+        <form onSubmit={handleSubmit}>
+    <div className="mb-3">
+    
+      <label htmlFor="name" className="form-label">Name</label>
+      <input type="text" className="form-control" id="exampleInputName" name = "name" value = {credentials.name} onChange = {handleInptChange}/>
+    </div>
+    <div className="mb-3">
+      <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
+      <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "email" value = {credentials.email} onChange = {handleInptChange}/>
+      <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+    </div>
+    <div className="mb-3">
+      <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+      <input type="password" className="form-control" id="exampleInputPassword1" name = "password" value = {credentials.password} onChange = {handleInptChange}/>
+    </div>
+ 
+   <Link to = "/login"> <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+         >Submit</button></Link>
+    
+  </form> <p className="mt-10 text-center text-sm text-gray-500">
         Already a member?{' '}
         <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
           Sign In
         </Link>
       </p>
     </div>
-  </div>
+  </div></>
   )
 }
