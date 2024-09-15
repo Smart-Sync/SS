@@ -24,20 +24,20 @@ const router = createBrowserRouter([
   {
     path: "/admin/homepage",
     element: (
-      <AdminHomPage></AdminHomPage>
+      localStorage.getItem("authToken")?<AdminHomPage></AdminHomPage>:null
     ),
   },
   {
     path: "/admin/newboard",
-    element: <NewBoardPage></NewBoardPage>,
+    element: localStorage.getItem("authToken")?<NewBoardPage></NewBoardPage>:null,
   },
   {
     path: "/admin/schedule-boards",
-    element: <ExpertPage/>,
+    element:  localStorage.getItem("authToken")?<ExpertPage/>:null,
   },
   {
     path: "/admin/experts-profile",
-    element: <ExpertsProfilePage/>,
+    element:  localStorage.getItem("authToken")?<ExpertsProfilePage/>:null,
   },
   {
     path: "/expert/homepage",
