@@ -10,15 +10,23 @@ export const MappingResult = () => {
   const [status, setStatus] = useState('initial');
   let {state}=useLocation()
   const score=state.score
+
   console.log(score)
-  const notifyExpert = async () => {
+
+
+  const notifyExpert = async (name, email) => {
     try {
+      console.log(name, email)
       setStatus('pending');
-      const response = await fetch('/api/notify-expert', {
+      const response = await fetch('http://localhost:5000/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          expertName: name,  // Include expert name
+          recipientEmail:email, // Include expert email
+        }),
       });
 
       const result = await response.json();
@@ -50,7 +58,7 @@ export const MappingResult = () => {
   return (
     Object.keys(score).length > 0 && (
       <div className="grid-container">
-        {Object.entries(score).map(([expert, candidates], index) => (
+        {Object.entries(score).map(([expert,{candidates, email}], index) => (
           <div key={index} className="expert-card">
             <Card className="flex flex-row border rounded-lg shadow-md">
               <CardContent className="flex-1 flex items-center justify-center">
@@ -84,7 +92,7 @@ export const MappingResult = () => {
                   <Button
                     variant="contained"
                     className={`text-sm mt-3 w-[150px] ${color}`}
-                    onClick={status === 'initial' ? notifyExpert : undefined}
+                    onClick={status === 'initial' ? () => notifyExpert(expert, email) : undefined}
                     disabled={disabled}
                   >
                     {text}

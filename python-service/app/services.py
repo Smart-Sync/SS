@@ -31,14 +31,17 @@ def process_matching(experts_df, candidates_df, interview_subject):
 
     # Sort and select top experts
     top_experts = experts_df.sort_values(by='matching_score', ascending=False).head(10)
-    
+    print(top_experts)
     # Calculate profile scores and relevancy scores
-    allocations = {expert['name']: [] for _, expert in top_experts.iterrows()}  # To store allocated candidates
+    # allocations = {expert['name']: [] for _, expert in top_experts.iterrows()}  # To store allocated candidates
+    allocations = {expert['name']: {'email': expert['email'], 'candidates': []} for _, expert in top_experts.iterrows()}
+
     remaining_candidates = candidates_df.copy()  # Copy to track unallocated candidates
     threshold = math.ceil(len(candidates_df) / len(top_experts))
 
     for _, expert in top_experts.iterrows():
         expert_name = expert['name']
+        expert_email = expert['email']
         # Calculate the relevancy score for each candidate
         candidate_scores = []
         for _, candidate in remaining_candidates.iterrows():
@@ -53,7 +56,9 @@ def process_matching(experts_df, candidates_df, interview_subject):
 
         # Allot top 'threshold' candidates to the expert
         allocated_candidates = sorted_candidates[:threshold]
-        allocations[expert_name].extend(allocated_candidates)
+        # allocations[expert_name].extend(allocated_candidates)
+        for candidate in allocated_candidates:
+            allocations[expert_name]['candidates'].append(candidate)
 
         # Remove allocated candidates from the remaining pool
         remaining_candidates = remaining_candidates[~remaining_candidates['name'].isin([c['Candidate'] for c in allocated_candidates])]
