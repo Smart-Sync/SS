@@ -1,9 +1,28 @@
-import React from 'react'
-import {Link} from "react-router-dom"
+import React,  { useState } from 'react'
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 export const NewBoard = () => {
+  const [reqt, setReqt] = useState('');
+  const [score, setScore] = useState({});
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await axios.post('http://localhost:5000/api/profile-score', {
+            requirement: reqt,
+        });
+        setScore(response.data || {}); // Set score or default to empty object if undefined
+        console.log(score);
+        navigate('/admin/schedule-boards', { state: { score: response.data } }); // Pass the score list directly
+      } catch (error) {
+        console.error("Error fetching profile score", error);
+        setScore({}); // Reset score on error
+    }
+    
+};
   return (
     <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 mt-12">
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-2xl font-semibold leading-7 text-gray-900">Upload Requirements for candidate selection </h2>
@@ -20,12 +39,15 @@ export const NewBoard = () => {
               <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
                 Technical Domain
               </label>
+              
               <div className="mt-2">
                 <input
                   id="first-name"
                   name="first-name"
                   type="text"
+                  value={reqt}
                   autoComplete="given-name"
+                  onChange={(e)=>setReqt(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -135,18 +157,12 @@ export const NewBoard = () => {
        
         
       </div>
-
-      <div className="mt-6 flex items-center justify-end gap-x-6">
-        <Link to = "/"><button type="button" className="text-sm font-semibold leading-6 text-gray-900">
-          Cancel
-        </button></Link>
-        <Link to = "/"><button
+        <button
           type="submit"
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save
-        </button></Link>
-      </div>
+        </button>
       </div>
     </form>
     </div>
