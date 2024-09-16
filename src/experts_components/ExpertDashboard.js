@@ -8,7 +8,7 @@ export const ExpertDashboard = () => {
       {/* Profile Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Profile Picture and Name */}
-        <div className="bg-white shadow-md p-0 rounded-lg flex flex-col items-center justify-center h-58">
+        <div style={{ backgroundColor: '#D2E0FB' }}  className="bg-blue-300 shadow-md p-0 rounded-lg flex flex-col items-center justify-center h-58">
           <img
             src={imge}
             alt="Profile"
@@ -18,14 +18,14 @@ export const ExpertDashboard = () => {
         </div>
 
         {/* Board Section (Accept/Reject Buttons) */}
-        <div className="col-span-2 h-auto">
+        <div className="col-span-2 h-auto ">
          <Carousel className="h-full" />
         </div>
 
         {/* Upcoming Interviews Section */}
         
       </div>
-      <div className="bg-white shadow-md p-6 rounded-lg mt-6 lg:mt-6">
+      <div className=" shadow-md p-6 rounded-lg mt-6 lg:mt-6">
   <h3 className="text-xl font-semibold mb-4">Upcoming Interviews</h3>
      <Agenda/>
   {/* Make this part scrollable */}
@@ -55,7 +55,7 @@ export const ExpertDashboard = () => {
       {/* Stats and Feedbacks Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         {/* Stats */}
-        <div className="bg-white shadow-md p-6 rounded-lg">
+        <div style={{ backgroundColor: '#FFF8E8' }}  className=" shadow-md p-6 rounded-lg">
         <h3 class="text-lg font-semibold mb-4">Statistics</h3>
             <ul class="space-y-3">
                 <li class="flex justify-between">
@@ -78,7 +78,7 @@ export const ExpertDashboard = () => {
         </div>
 
         {/* Feedbacks */}
-        <div className="bg-white shadow-md p-6 rounded-lg">
+        <div  style={{ backgroundColor: '#D1E9F6' }} className=" shadow-md p-6 rounded-lg">
           {/* Form to add new feedback */}
           <h3 className="text-xl font-semibold mb-4">Feedbacks</h3>
   <form className="mt-4">
