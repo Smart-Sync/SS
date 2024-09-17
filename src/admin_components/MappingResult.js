@@ -60,7 +60,7 @@ export const MappingResult = () => {
       <div className="grid-container">
         {Object.entries(score).map(([expert,{candidates, email}], index) => (
           <div key={index} className="expert-card">
-            <Card className="flex flex-row border rounded-lg shadow-md">
+            <Card className="flex flex-row border rounded-lg shadow-md mb-3">
               <CardContent className="flex-1 flex items-center justify-center">
                 <div>
                   <Avatar className="mb-2 w-12 h-12" sx={{ bgcolor: indigo[500] }}>
