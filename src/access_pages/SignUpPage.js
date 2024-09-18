@@ -5,13 +5,14 @@ export const SignUpPage = () => {
     const [credentials, setCredentials] = useState({name:"",email:"",password:"", geolocation:""})
    
     const handleSubmit = async(e)=>{
+      console.log("andr aagye")
         e.preventDefault();
         const response = await fetch('http://localhost:5000/api/createuser',
            { method:"POST",
             headers:{
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({name:credentials.name,email:credentials.email,password:credentials.password,location:credentials.geolocation,})
+            body:JSON.stringify({name:credentials.name,email:credentials.email,password:credentials.password})
 
         }
         )
@@ -56,7 +57,7 @@ export const SignUpPage = () => {
       <input type="password" className="form-control" id="exampleInputPassword1" name = "password" value = {credentials.password} onChange = {handleInptChange}/>
     </div>
  
-   <Link to = "/login"> <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+   <Link to = "/login"> <button onClick={handleSubmit} type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
          >Submit</button></Link>
     
   </form> <p className="mt-10 text-center text-sm text-gray-500">

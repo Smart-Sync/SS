@@ -13,6 +13,7 @@ router.post(
     body("password", "Invalid Password").isLength({ min: 5 }),
     body("name", "Invalid Name").isLength({ min: 5 }),
     async (req, res) => {
+      console.log("****")
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });

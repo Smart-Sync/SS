@@ -2,7 +2,7 @@ const express = require('express')
 const axios = require('axios');
 const cors = require('cors');
 const nodemailer = require('nodemailer')
-
+const saveDetails = require('./routes/SaveDetails')
 
 const app = express();
 const port = 5000;
@@ -104,9 +104,11 @@ app.post('/send-email', async (req, res) => {
 app.get('/',(req,res)=>{
     res.send('Hello World');
 })
+// Add this line to include your new route
+app.use('/api', require("./routes/SaveDetails"));
 
 app.use('/api',require("./routes/CreateUser"))
-app.use('/api',require("./routes/Board"))
+// app.use('/api',require("./routes/Board"))
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
   })
