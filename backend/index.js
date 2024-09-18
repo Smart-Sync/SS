@@ -9,10 +9,12 @@ const boards = require('./routes/Boards')
 const app = express();
 const port = 5000;
 const mongoDB = require('./db')
+const mongoEx = require('./dbExpert')
 const FASTAPI_URL = 'http://localhost:8000';
 app.use(cors({origin: '*'}));
 app.use(express.json());
 mongoDB();
+mongoEx();
 
 
 // API route to get profile score from FastAPI
@@ -110,9 +112,10 @@ app.get('/',(req,res)=>{
     res.send('Hello World');
 })
 // Add this line to include your new route
-app.use('/api/save-details', saveDetails);
+app.use('/api', require("./routes/SaveDetails"));
 
 app.use('/api',require("./routes/CreateUser"))
+// app.use('/api',require("./routes/Board"))
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
   })

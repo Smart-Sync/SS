@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-export const LoginPage = () => {
+import { useNavigate } from "react-router-dom";
+export const LoginExpert = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   let navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/loginuser", {
+    const response = await fetch("http://localhost:5000/api/loginexpert", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +24,7 @@ export const LoginPage = () => {
       localStorage.setItem("userEmail",credentials.email)
       localStorage.setItem("authToken",json.authToken)
       console.log(localStorage.getItem("authToken"))
-      navigate("/admin/homepage")
+      navigate("/expert/homepage")
     }
   };
   const handleInptChange = (event) => {
@@ -40,7 +40,7 @@ export const LoginPage = () => {
         className="mx-auto h-10 w-auto"
       />
       <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-        Sign in to your account
+        Sign in to your account as Expert
       </h2>
     </div>
 
@@ -84,12 +84,12 @@ export const LoginPage = () => {
           </button>
          
         </form>
-        <p className="mt-10 text-center text-sm text-gray-500">
+        {/* <p className="mt-10 text-center text-sm text-gray-500">
         Not a member?{' '}
-        <Link to="/createuser" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+        <Link to="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
           Create an Account
         </Link>
-      </p>
+      </p> */}
     </div>
   </div>
     </>

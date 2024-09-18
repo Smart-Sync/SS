@@ -13,6 +13,7 @@ const createToken = (expertName, requirement, date) => {
   const data = `${expertName}-${requirement}-${validDate.toString()}`;
   return crypto.createHash('sha256').update(data).digest('hex');
 }
+const Expert = require('../models/Expert');
 
 // Endpoint to save form details
 router.post('/save', async (req, res) => {
@@ -56,5 +57,29 @@ router.post('/save', async (req, res) => {
     res.status(500).json({ error: 'Error saving details' });
   }
 });
+// Endpoint to fetch all saved form details
+router.get('/details', async (req, res) => {
+  try {
+    // Fetch all details from the database
+    const details = await Detail.find();
+
+    // Respond with the fetched details
+    res.status(200).json(details);
+  } catch (error) {
+    console.error('Error fetching details:', error);
+    res.status(500).json({ error: 'Error fetching details' });
+  }
+});
+// Backend API to fetch experts list
+router.get('/experts', async (req, res) => {
+  try {
+    const expert = await Expert.find(); // Assuming 'Expert' is your model name
+    res.status(200).json(expert);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching experts' });
+  }
+});
+
+
 
 module.exports = router;
