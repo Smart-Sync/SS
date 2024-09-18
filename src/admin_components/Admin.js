@@ -19,9 +19,7 @@ export const Admin = () => {
     </div>
     <div className=" flex flex-row gap-3 mt-12">
       <Card></Card>
-      <Card></Card>
-      <Card></Card>
-      <Card></Card>
+     
       </div>
   </div>
 

@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
-import { useLocation ,Link} from 'react-router-dom';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Avatar from '@mui/material/Avatar';
+import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Avatar, Button, Card, CardContent } from '@mui/material';
 import { indigo } from '@mui/material/colors';
-import Button from '@mui/material/Button';
 
 export const MappingResult = () => {
   const [status, setStatus] = useState('initial');
-  let {state}=useLocation()
-  const score=state.score
+  let { state } = useLocation();
 
-  console.log(score)
-
+  // Check if state or state.score exists
+  const score = state?.score || {};
 
   const notifyExpert = async (name, email) => {
     try {
-      console.log(name, email)
+      console.log(name, email);
       setStatus('pending');
       const response = await fetch('http://localhost:5000/send-email', {
         method: 'POST',
@@ -24,8 +20,8 @@ export const MappingResult = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          expertName: name,  // Include expert name
-          recipientEmail:email, // Include expert email
+          expertName: name,
+          recipientEmail: email,
         }),
       });
 
@@ -58,7 +54,7 @@ export const MappingResult = () => {
   return (
     Object.keys(score).length > 0 && (
       <div className="grid-container">
-        {Object.entries(score).map(([expert,{candidates, email}], index) => (
+        {Object.entries(score).map(([expert, { candidates, email }], index) => (
           <div key={index} className="expert-card">
             <Card className="flex flex-row border rounded-lg shadow-md mb-3">
               <CardContent className="flex-1 flex items-center justify-center">

@@ -106,6 +106,7 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/api',require("./routes/CreateUser"))
+app.use('/api',require("./routes/Board"))
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
   })
