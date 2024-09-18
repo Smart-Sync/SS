@@ -5,10 +5,10 @@ import os
 client = MongoClient("mongodb+srv://khushichoudhary1107:Khushi123@cluster0.n31bj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 # Database and collection selection
-expert_db = client["expert_database"]
+expert_db = client["test"]
 expert_collection = expert_db["experts"]
 
-candidate_db = client["candidate_database"]
+candidate_db = client["test"]
 candidates_collection = candidate_db["candidates"]
 
 def get_candidates():
