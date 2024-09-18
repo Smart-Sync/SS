@@ -13,7 +13,6 @@ export const MappingResult = () => {
 
   console.log(score)
 
-
   const notifyExpert = async (name, email) => {
     try {
       console.log(name, email)
