@@ -31,7 +31,7 @@ const router = createBrowserRouter([
     element: localStorage.getItem("authToken")?<NewBoardPage></NewBoardPage>:null,
   },
   {
-    path: "/admin/schedule-boards",
+    path: "/admin/schedule-boards/:id",
     element:  localStorage.getItem("authToken")?<ExpertPage/>:null,
   },
   {
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
     element:<LoginPage/>
   },
   {
-    path: "/signup",
+    path: "/createuser",
     element:<SignUpPage/>
   },
   

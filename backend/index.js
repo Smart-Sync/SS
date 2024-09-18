@@ -3,13 +3,14 @@ const axios = require('axios');
 const cors = require('cors');
 const nodemailer = require('nodemailer')
 const saveDetails = require('./routes/SaveDetails')
-
+const acceptance = require('./routes/ExpertAcceptance')
+const result = require('./routes/MappingResults')
 const app = express();
 const port = 5000;
 const mongoDB = require('./db')
 const mongoEx = require('./dbExpert')
 const FASTAPI_URL = 'http://localhost:8000';
-app.use(cors());
+app.use(cors({origin: '*'}));
 app.use(express.json());
 mongoDB();
 mongoEx();
@@ -31,9 +32,10 @@ app.post('/api/profile-score', async (req, res) => {
     }
 });
 
-
+app.use('/api',acceptance)
+app.use('/api', result)
 app.post('/send-email', async (req, res) => {
-  const { expertName, recipientEmail } = req.body;
+  const { expertName, recipientEmail, token } = req.body;
 
   try {
     const transporter = nodemailer.createTransport({
@@ -71,12 +73,12 @@ app.post('/send-email', async (req, res) => {
 
             <!-- Accept and Decline Buttons -->
             <div style="margin-top: 30px;">
-              <a href="http://localhost:3000/response?email=${recipientEmail}&status=accepted" 
+              <a href="http://localhost:5000/api/update-response?token=${token}&response=accepted" 
                  style="display: inline-block; padding: 10px 20px; background-color: #4caf50; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">
                 Accept
               </a>
               
-              <a href="http://localhost:3000/response?email=${recipientEmail}&status=declined" 
+              <a href="http://localhost:5000/api/update-response?token=${token}&response=declined" 
                  style="display: inline-block; padding: 10px 20px; background-color: #f44336; color: white; text-decoration: none; border-radius: 5px;">
                 Decline
               </a>
@@ -107,9 +109,10 @@ app.get('/',(req,res)=>{
     res.send('Hello World');
 })
 // Add this line to include your new route
-app.use('/api/save-details', saveDetails);
+app.use('/api', require("./routes/SaveDetails"));
 
 app.use('/api',require("./routes/CreateUser"))
+// app.use('/api',require("./routes/Board"))
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
   })

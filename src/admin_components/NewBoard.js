@@ -6,27 +6,29 @@ export const NewBoard = () => {
   const [date, setDate] = useState('');
   const [score, setScore] = useState({});
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      
       const response = await axios.post('http://localhost:5000/api/profile-score', {
         requirement: reqt,
       });
       setScore(response.data || {}); // Set score or default to empty object if undefined
       console.log(response.data);
 
-      const res = await axios.post('http://localhost:5000/api/save-details/save',{
+      const res = await axios.post('http://localhost:5000/api/save-details/save', {
         requirement: reqt,
         date: date,
         experts: response.data
       });
       console.log(res)
-      navigate('/admin/schedule-boards', { state: { score: response.data } }); // Pass the score list directly
+      console.log(res.data._id)
+      navigate(`/admin/schedule-boards/${res.data._id}`, { state: { score: response.data } }); // Pass the score list directly
     } catch (error) {
       console.error("Error fetching profile score", error);
       setScore({}); // Reset score on error
     }
-
   };
   return (
     <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 mt-12">
@@ -72,7 +74,7 @@ export const NewBoard = () => {
                     id="startDate"
                     name="startDate"
                     value={date}
-                    onChange={(e)=> setDate(e.target.value)}
+                    onChange={(e) => setDate(e.target.value)}
                     className="block w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
