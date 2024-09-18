@@ -13,6 +13,7 @@ import { ExpertDashboard } from './experts_components/ExpertDashboard';
 import { LandingPage } from './access_pages/LandingPage';
 import { LoginPage } from './access_pages/LoginPage';
 import { SignUpPage } from './access_pages/SignUpPage';
+import { Admin } from './admin_components/Admin';
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
     path: "/signup",
     element:<SignUpPage/>
   },
+  {
+    path:"/admin/boards",
+    element: <Admin></Admin>
+  }
   
 ]);
 

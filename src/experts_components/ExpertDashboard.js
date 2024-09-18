@@ -14,7 +14,7 @@ export const ExpertDashboard = () => {
             alt="Profile"
             className="w-32 h-32 rounded-full mb-4"
           />
-          <h2 className="text-lg font-semibold">Dr. Kamala Sharma </h2>
+          <h2 className="text-lg font-semibold">Maria Lopez </h2>
         </div>
 
         {/* Board Section (Accept/Reject Buttons) */}

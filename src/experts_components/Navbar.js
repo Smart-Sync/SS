@@ -12,7 +12,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import pic from '../asset/sih.png'
 const navigation = [
-  { name: "Home", href: "/expert/homepage", current: true },
+  { name: "Home", href: "/", current: true },
 
 ];
 
@@ -114,7 +114,7 @@ export const Navbar = ({ children }) => {
                   </MenuItem>
                   <MenuItem>
                     <a
-                      href="#"
+                      href="/"
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                     >
                       Sign out

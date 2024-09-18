@@ -117,7 +117,7 @@ import Button from '@mui/material/Button';
 
 export const MappingResult = ({id}) => {
    // Get board ID from URL
-  const [status, setStatus] = useState('initial');
+  const [status, setStatus] = useState({});
   const [boardDetails, setBoardDetails] = useState(null); // To store fetched data
   const [loading, setLoading] = useState(true); // Handle loading state
   const [error, setError] = useState(null); // Handle error state
@@ -150,7 +150,11 @@ export const MappingResult = ({id}) => {
 
   const notifyExpert = async (name, email, token) => {
     try {
-      setStatus('pending');
+      setStatus((prevStatus) => ({
+        ...prevStatus,
+        [name]: 'pending', // Set this expert's status to pending
+      }));
+
       const response = await fetch('http://localhost:5000/send-email', {
         method: 'POST',
         headers: {
@@ -164,18 +168,42 @@ export const MappingResult = ({id}) => {
       });
 
       const result = await response.json();
-      if (result.status === 'approved') {
-        setStatus('approved');
-      } else if (result.status === 'rejected') {
-        setStatus('rejected');
-      }
+      setStatus((prevStatus) => ({
+        ...prevStatus,
+        [name]: result.status === 'approved' ? 'approved' : 'rejected', // Set status based on the result
+      }));
+
     } catch (error) {
       console.error('Error notifying expert:', error);
     }
   };
 
-  const getButtonProperties = () => {
-    switch (status) {
+  const pollForUpdates = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/board-details/${boardDetails._id}`);
+      const updatedDetails = await response.json();
+      
+      // Update the status for each expert based on the response
+      const updatedStatus = {};
+      updatedDetails.experts.forEach((expert) => {
+        updatedStatus[expert.name] = expert.acceptanceStatus ? 'approved' : 'rejected';
+      });
+      setStatus(updatedStatus);
+    } catch (error) {
+      console.error('Error polling for updates:', error);
+    }
+  };
+
+  // Start polling every 50 seconds
+  useEffect(() => {
+    const interval = setInterval(pollForUpdates, 30000);
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, [boardDetails]);
+
+
+  const getButtonProperties = (name) => {
+    const expertStatus = status[name];
+    switch (expertStatus) {
       case 'pending':
         return { text: 'Approval Awaited', color: 'bg-gray-500', disabled: true };
       case 'approved':
@@ -187,7 +215,6 @@ export const MappingResult = ({id}) => {
     }
   };
 
-  const { text, color, disabled } = getButtonProperties();
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -228,11 +255,11 @@ export const MappingResult = ({id}) => {
                   <span className="font-light mt-1 mb-3">Time: 12:00 pm onwards</span>
                   <Button
                      variant="contained"
-                     className={`text-sm mt-3 w-[150px] ${color}`}
-                     onClick={status === 'initial' ? () => notifyExpert(expert.name, expert.email, expert.token) : undefined}
-                     disabled={disabled}
+                     className={`text-sm mt-3 w-[150px] ${getButtonProperties(expert.name).color}`}
+                     onClick={status[expert.name] === undefined ? () => notifyExpert(expert.name, expert.email, expert.token) : undefined}
+                    disabled={getButtonProperties(expert.name).disabled}
                    >
-                    {text}
+                    {getButtonProperties(expert.name).text}
                   </Button>
                 </div>
               </CardContent>

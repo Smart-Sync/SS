@@ -38,7 +38,7 @@ router.post('/save', async (req, res) => {
           Candidate: candidate.Candidate,
           RelevancyScore: candidate['Relevancy Score']
         })),
-        acceptanceStatus: expertDetails.acceptanceStatus || false,
+        acceptanceStatus: expertDetails.acceptanceStatus || "pending",
         token: token,
       });
     }

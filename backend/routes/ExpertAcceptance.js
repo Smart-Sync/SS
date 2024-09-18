@@ -17,7 +17,7 @@ router.get('/update-response', async (req, res) => {
       // Find the correct expert and interview based on the token
       const result = await Detail.findOneAndUpdate(
         { 'experts.token': token }, // Find the expert with this token
-        { $set: { 'experts.$.acceptanceStatus': response === 'accepted' } } ,// Update the acceptance status
+        { $set: { 'experts.$.acceptanceStatus': response === 'accepted' ? "approved" : "rejected" } } ,// Update the acceptance status
         { new: true }
 
       );
