@@ -12,8 +12,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import pic from '../asset/sih.png'
 const navigation = [
-  { name: "Home", href: "/experthomepage", current: true },
-  { name: "Scheduled Meetings", href: "#", current: false },
+  { name: "Home", href: "/expert/homepage", current: true },
 
 ];
 

@@ -33,7 +33,7 @@ const Carousel = () => {
   return (
     <div id="controls-carousel" className="relative w-full " data-carousel="static">
       {/* Carousel Wrapper */}
-      <div className="relative h-56 overflow-hidden rounded-lg md:h-79 bg-white shadow-md p-6 rounded-lg">
+      <div style={{ backgroundColor: '#FEF9D9' }}  className="relative h-56 overflow-hidden rounded-lg md:h-79 bg-red-100 shadow-md p-6 ">
         {items.map((item, index) => (
           <div
             key={index}
@@ -44,7 +44,7 @@ const Carousel = () => {
             <h2 className="text-xl font-bold mb-4">{item.title}</h2>
             <p className="mb-6">{item.description}</p>
             <div>
-              <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-4 hover:bg-green-600">
+              <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-5 hover:bg-green-600">
                 Accept
               </button>
               <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
