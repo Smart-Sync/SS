@@ -29,40 +29,78 @@ app.post('/api/profile-score', async (req, res) => {
     }
 });
 
+
 app.post('/send-email', async (req, res) => {
-    const { expertName, recipientEmail } = req.body;
-  
-    try {
-      // Create a transporter
-      const transporter = nodemailer.createTransport({
-        service: 'gmail', // You can use other email services
-        host: "smtp.gmail.com",
-        auth: {
-          user: 'tanviv8745@gmail.com', // Replace with your email
-          pass: 'udol rccp ksrc bqog',  // Replace with your email password (or use OAuth2)
-        },
-      });
-  
-      // Email options
-      const mailOptions = {
-        from: 'tanviv@8745@gmail.com', // Replace with your email
-        to: recipientEmail,
-        subject: 'Expert Notification',
-        text: `Dear User, you have an appointment with ${expertName}. Testing SmartSync`,
-      };
-  
-      // Send the email
-      await transporter.sendMail(mailOptions);
-      console.log("Sent mail")
-  
-      res.status(200).send('Email sent successfully');
-    } catch (error) {
-      console.error('Error sending email', error);
-      res.status(500).send('Error sending email');
-    }
+  const { expertName, recipientEmail } = req.body;
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      auth: {
+        user: 'tanviv8745@gmail.com', 
+        pass: 'udol rccp ksrc bqog',
+      },
+    });
+
+    const mailOptions = {
+      from: 'tanviv8745@gmail.com',
+      to: recipientEmail,
+      subject: 'Invitation for SmartSync',
+      html: `
+        <div style="width: 100%; background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif; text-align: center;">
+          <div style="max-width: 600px; background-color: white; padding: 20px; margin: 0 auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            
+            // <!-- Logo or Image -->
+            // <img src="https://your-image-url.com/logo.png" alt="Logo" style="max-width: 100px; margin-bottom: 20px;" />
+
+            <!-- Heading with SmartSync -->
+            <h1 style="color: indigo; font-weight: bold; font-size: 24px; margin-bottom: 20px;">SmartSync</h1>
+            
+            <!-- Message -->
+            <p style="font-size: 16px; color: #333; line-height: 1.6;">
+              Dear User,<br><br>
+              Greetings from Smart-Sync.You have been invited for an interview </strong>.
+            </p>
+
+            <p style="font-size: 16px; color: #333; line-height: 1.6;">
+              Would you like to accept or decline the invitation to this scheduled meeting?
+            </p>
+
+            <!-- Accept and Decline Buttons -->
+            <div style="margin-top: 30px;">
+              <a href="http://localhost:3000/response?email=${recipientEmail}&status=accepted" 
+                 style="display: inline-block; padding: 10px 20px; background-color: #4caf50; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">
+                Accept
+              </a>
+              
+              <a href="http://localhost:3000/response?email=${recipientEmail}&status=declined" 
+                 style="display: inline-block; padding: 10px 20px; background-color: #f44336; color: white; text-decoration: none; border-radius: 5px;">
+                Decline
+              </a>
+            </div>
+
+            <p style="margin-top: 30px; color: #777; font-size: 14px;">
+              Thank you!<br>The SmartSync Team
+            </p>
+
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Sent mail");
+
+    res.status(200).send('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email', error);
+    res.status(500).send('Error sending email');
+  }
 });
 
-  
+
+
 app.get('/',(req,res)=>{
     res.send('Hello World');
 })
