@@ -2,6 +2,7 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const router = express.Router();
 const User = require("../models/User");
+const Expert=require("../models/Expert")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -86,5 +87,52 @@ router.post(
       }
     }
   );
+  //Expert login
+  router.post(
+    "/loginexpert",
+    body("email", "Invalid Email").isEmail(),
+    body("password", "Invalid Password").isLength({ min: 5 }),
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
   
+      let email = req.body.email;
+  
+      try {
+        let userdata = await Expert.findOne({ email });
+        if (!userdata) {
+          return res
+            .status(400)
+            .json({ errors: "Try logging in with correct credentials" });
+        }
+  
+        console.log(" Data:", userdata); // Log user data
+  
+        const pwdCompare = await bcrypt.compare(req.body.password, userdata.password);
+  
+        console.log("Password Comparison Result:", pwdCompare); // Log password comparison result
+  
+        if (!pwdCompare) {
+          return res
+            .status(400)
+            .json({ errors: "Try logging in with correct credentials!" });
+        }
+  
+        const data = {
+          user: {
+            id: userdata.id,
+          },
+        };
+  
+        const authToken = jwt.sign(data, jwtSecret);
+  
+        return res.json({ success: true, authToken: authToken });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, error: error.message });
+      }
+    }
+  );  
   module.exports = router;

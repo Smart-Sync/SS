@@ -7,10 +7,12 @@ const saveDetails = require('./routes/SaveDetails')
 const app = express();
 const port = 5000;
 const mongoDB = require('./db')
+const mongoEx = require('./dbExpert')
 const FASTAPI_URL = 'http://localhost:8000';
 app.use(cors());
 app.use(express.json());
 mongoDB();
+mongoEx();
 
 
 // API route to get profile score from FastAPI

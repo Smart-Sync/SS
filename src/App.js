@@ -4,15 +4,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { AdminHomPage } from './admin_pages/AdminHomPage';
-import { ExpertHomPage } from './expert_pages/ExpertHomePage';
+import {ExpertHomePage} from './expert_pages/ExpertHomePage'
 import { NewBoardPage } from './admin_pages/NewBoardPage';
 import { ExpertPage } from './admin_pages/ExpertPage';
 import { ExpertsProfilePage } from './admin_pages/ExpertsProfilePage';
-import ExpertProfilePage from './expert_pages/ExpertProfilePage';
-import { ExpertDashboard } from './experts_components/ExpertDashboard';
 import { LandingPage } from './access_pages/LandingPage';
 import { LoginPage } from './access_pages/LoginPage';
 import { SignUpPage } from './access_pages/SignUpPage';
+import { LoginExpert } from './access_pages/LoginExpert';
 
 const router = createBrowserRouter([
   {
@@ -41,11 +40,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/expert/homepage",
-    element:<ExpertHomPage></ExpertHomPage>
+    element:localStorage.getItem("authToken")?<ExpertHomePage/>:null,
   },
   {
     path: "/expert/expert-profile",
-    element:<ExpertProfilePage></ExpertProfilePage>
+    element: localStorage.getItem("authToken")?<ExpertsProfilePage/>:null,
+  },
+  { path: "/loginexpert",
+    element:<LoginExpert/>
+
   },
   {
     path: "/login",
