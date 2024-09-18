@@ -4,6 +4,7 @@ const cors = require('cors');
 const nodemailer = require('nodemailer')
 const saveDetails = require('./routes/SaveDetails')
 const acceptance = require('./routes/ExpertAcceptance')
+const result = require('./routes/MappingResults')
 const app = express();
 const port = 5000;
 const mongoDB = require('./db')
@@ -30,7 +31,7 @@ app.post('/api/profile-score', async (req, res) => {
 });
 
 app.use('/api',acceptance)
-
+app.use('/api', result)
 app.post('/send-email', async (req, res) => {
   const { expertName, recipientEmail, token } = req.body;
 

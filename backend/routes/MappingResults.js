@@ -4,7 +4,8 @@ const router = express.Router();
 const Detail = require('../models/Detail');
 
 // Fetch board details by requirement or other identifier (like board ID)
-router.get('/api/board-details/:id', async (req, res) => {
+router.get('/board-details/:id', async (req, res) => {
+  console.log("Mapping Result from db")
   const boardId = req.params.id; // Assuming you're using a unique ID for the board
 
   try {
