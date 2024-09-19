@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../asset/drdoofficial-seeklogo.com.png";
 import {
   Disclosure,
   DisclosureButton,
@@ -10,11 +11,8 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import pic from '../asset/sih.png'
-const navigation = [
-  { name: "Home", href: "/", current: true },
-
-];
+import pic from "../asset/sih.png";
+const navigation = [{ name: "Home", href: "/", current: true }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -43,11 +41,7 @@ export const Navbar = ({ children }) => {
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <img
-                  alt="Your Company"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                  className="h-8 w-auto"
-                />
+                <img alt="DRDO Logo" src={logo} className="h-12 w-auto" />
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
@@ -85,11 +79,7 @@ export const Navbar = ({ children }) => {
                   <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src={pic}
-                      className="h-8 w-8 rounded-full"
-                    />
+                    <img alt="" src={pic} className="h-8 w-8 rounded-full" />
                   </MenuButton>
                 </div>
                 <MenuItems
@@ -149,13 +139,16 @@ export const Navbar = ({ children }) => {
       </Disclosure>
       <header className="bg-white shadow-sm">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Dashboard
+          </h1>
         </div>
       </header>
       <main>
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </main>
     </div>
-   
   );
 };
