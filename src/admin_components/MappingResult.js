@@ -31,12 +31,12 @@ export const MappingResult = ({ id }) => {
 
           setLoading(false);
         } else {
-          setError(data.message || 'Failed to fetch board details');
+          setError(data.message || "Failed to fetch board details");
           setLoading(false);
         }
       } catch (err) {
-        console.error('Error fetching board details:', err);
-        setError('Error fetching board details');
+        console.error("Error fetching board details:", err);
+        setError("Error fetching board details");
         setLoading(false);
       }
     };
@@ -54,14 +54,15 @@ export const MappingResult = ({ id }) => {
         [name]: 'pending', // Set this expert's status to pending after clicking Notify
       }));
 
-      const response = await fetch('http://localhost:5000/send-email', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/send-email", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           expertName: name,
           recipientEmail: email,
+          token: token,
           token: token,
         }),
       });
@@ -70,14 +71,16 @@ export const MappingResult = ({ id }) => {
 
       // Status will remain 'pending' until the response comes from the expert (via polling)
     } catch (error) {
-      console.error('Error notifying expert:', error);
+      console.error("Error notifying expert:", error);
     }
   };
 
   // Polling for updates, only update status if the expert responded
   const pollForUpdates = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/board-details/${boardDetails._id}`);
+      const response = await fetch(
+        `http://localhost:5000/api/board-details/${boardDetails._id}`
+      );
       const updatedDetails = await response.json();
 
       // Only update the status if the expert responded (pending -> accepted/rejected)
@@ -96,7 +99,7 @@ export const MappingResult = ({ id }) => {
         ...updatedStatus, // Merge with the previous state, so it only changes when the expert responds
       }));
     } catch (error) {
-      console.error('Error polling for updates:', error);
+      console.error("Error polling for updates:", error);
     }
   };
 
@@ -135,7 +138,10 @@ export const MappingResult = ({ id }) => {
             <Card className="flex flex-row border rounded-lg shadow-md mb-3">
               <CardContent className="flex-1 flex items-center justify-center">
                 <div>
-                  <Avatar className="mb-2 w-12 h-12" sx={{ bgcolor: indigo[500] }}>
+                  <Avatar
+                    className="mb-2 w-12 h-12"
+                    sx={{ bgcolor: indigo[500] }}
+                  >
                     {expert.name.charAt(0)}
                   </Avatar>
                   <span className="flex-1 font-semibold">{expert.name}</span>
@@ -143,13 +149,18 @@ export const MappingResult = ({ id }) => {
               </CardContent>
 
               <div className="candidate-grid">
-                <div className="flex-1 h-[200px] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+                <div
+                  className="flex-1 h-[200px] overflow-y-auto"
+                  style={{ scrollbarWidth: "none" }}
+                >
                   {expert.candidates.map((item, idx) => (
                     <CardContent key={idx} className="flex-1">
                       <ul>
                         <li className="border-b pb-2 flex justify-between">
                           <span>{item.Candidate}</span>
-                          <span className="text-gray-500">{item['RelevancyScore'].toFixed(5)}</span>
+                          <span className="text-gray-500">
+                            {item["RelevancyScore"].toFixed(5)}
+                          </span>
                         </li>
                       </ul>
                     </CardContent>
@@ -171,6 +182,7 @@ export const MappingResult = ({ id }) => {
                         : undefined
                     }
                     disabled={getButtonProperties(expert.name).disabled}
+                  >
                   >
                     {getButtonProperties(expert.name).text}
                   </Button>

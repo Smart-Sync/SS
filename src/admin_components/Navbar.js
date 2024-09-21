@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../asset/drdoofficial-seeklogo.com.png";
 import {
   Disclosure,
   DisclosureButton,
@@ -10,19 +11,21 @@ import {
   Button,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link , useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const navigation = [
   { name: "Home", href: "/admin/homepage", current: true },
   { name: "Create New Board", href: "/admin/newboard", current: false },
   { name: "Modify Existing Board", href: "#", current: false },
-  { name: "View Expert Profile", href: "/admin/experts-profile", current: false },
+  {
+    name: "View Expert Profile",
+    href: "/admin/experts-profile",
+    current: false,
+  },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
-
 
 export const Navbar = ({ children }) => {
   const navigate = useNavigate();
@@ -52,11 +55,7 @@ export const Navbar = ({ children }) => {
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <img
-                  alt="Your Company"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                  className="h-8 w-auto"
-                />
+                <img alt="DRDO Logo" src={logo} className="h-12 w-auto" />
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
@@ -123,7 +122,7 @@ export const Navbar = ({ children }) => {
                   </MenuItem>
                   <MenuItem>
                     <Button
-                      onClick = {handleLogOut}
+                      onClick={handleLogOut}
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                     >
                       Sign out
@@ -158,13 +157,16 @@ export const Navbar = ({ children }) => {
       </Disclosure>
       <header className="bg-white shadow">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Smart Sync</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Smart Sync
+          </h1>
         </div>
       </header>
       <main>
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </main>
     </div>
-   
   );
 };
