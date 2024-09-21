@@ -16,7 +16,7 @@ const createToken = (expertName, requirement, date) => {
 const Expert = require('../models/Expert');
 
 // Endpoint to save form details
-router.post('/save', async (req, res) => {
+router.post('/save-details', async (req, res) => {
   try {
     const { requirement, date, experts } = req.body;
     const expertArray = [];

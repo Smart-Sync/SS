@@ -17,7 +17,7 @@ export const NewBoard = () => {
       setScore(response.data || {}); // Set score or default to empty object if undefined
       console.log(response.data);
 
-      const res = await axios.post('http://localhost:5000/api/save-details/save', {
+      const res = await axios.post('http://localhost:5000/api/save-details', {
         requirement: reqt,
         date: date,
         experts: response.data
