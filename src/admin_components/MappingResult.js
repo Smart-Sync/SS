@@ -183,7 +183,7 @@ export const MappingResult = ({ id }) => {
                     }
                     disabled={getButtonProperties(expert.name).disabled}
                   >
-                  >
+                  
                     {getButtonProperties(expert.name).text}
                   </Button>
                 </div>
