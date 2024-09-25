@@ -54,7 +54,7 @@ export const MappingResult = ({ id }) => {
         [name]: 'pending', // Set this expert's status to pending after clicking Notify
       }));
 
-      const response = await fetch("http://localhost:5000/send-email", {
+      const response = await fetch("http://localhost:5000/api/send-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export const MappingResult = ({ id }) => {
       const updatedStatus = {};
 
       updatedDetails.experts.forEach(expert => {
-        if (expert.acceptanceStatus === 'accepted') {
+        if (expert.acceptanceStatus === 'approved') {
           updatedStatus[expert.name] = 'approved';
         } else if (expert.acceptanceStatus === 'rejected') {
           updatedStatus[expert.name] = 'rejected';
@@ -103,10 +103,10 @@ export const MappingResult = ({ id }) => {
     }
   };
 
-  // Start polling every 30 seconds
+  // Start polling every 10 seconds
   useEffect(() => {
     if (boardDetails) {
-      const interval = setInterval(pollForUpdates, 30000); // Poll every 30 seconds
+      const interval = setInterval(pollForUpdates, 10000); // Poll every 30 seconds
       return () => clearInterval(interval); // Cleanup interval on component unmount
     }
   }, [boardDetails]);
@@ -182,7 +182,6 @@ export const MappingResult = ({ id }) => {
                         : undefined
                     }
                     disabled={getButtonProperties(expert.name).disabled}
-                  >
                   >
                     {getButtonProperties(expert.name).text}
                   </Button>

@@ -5,8 +5,10 @@ import logo from "../asset/drdoofficial-seeklogo.com.png";
 export const LoginExpert = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   let navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const response = await fetch("http://localhost:5000/api/loginexpert", {
       method: "POST",
       headers: {
@@ -18,15 +20,16 @@ export const LoginExpert = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     if (!json.success) {
       alert("Enter valid credentials");
     }
     if (json.success) {
       localStorage.setItem("userEmail", credentials.email);
       localStorage.setItem("authToken", json.authToken);
+      localStorage.setItem("expertId", json.expertId);
       console.log(localStorage.getItem("authToken"));
-      navigate("/expert/homepage");
+      navigate(`/expert/homepage/${json.expertId}`);
     }
   };
   const handleInptChange = (event) => {

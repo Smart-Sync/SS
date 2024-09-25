@@ -1,48 +1,33 @@
 import React, { useState } from 'react';
 
-const Carousel = () => {
+const Carousel = ({ interviews }) => {
   // State to track the current slide
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // List of carousel items
-  const items = [
-    {
-      title: 'Invitation 1',
-      description: 'You have been invited to an interview for the Software Engineer Position.',
-    },
-    {
-      title: 'Invitation 2',
-      description: 'You have been invited to an interview for the Data Scientist Position.',
-    },
-    {
-      title: 'Invitation 3',
-      description: 'You have been invited to an interview for the AI Specialist Position.',
-    },
-  ];
-
   // Function to go to the next slide
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % interviews.length);
   };
 
   // Function to go to the previous slide
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + interviews.length) % interviews.length);
   };
 
+  if (interviews.length === 0) return <div>No upcoming interviews.</div>; // Handle empty state
+
   return (
-    <div id="controls-carousel" className="relative w-full " data-carousel="static">
+    <div id="controls-carousel" className="relative w-full" data-carousel="static">
       {/* Carousel Wrapper */}
-      <div style={{ backgroundColor: '#FEF9D9' }}  className="relative h-56 overflow-hidden rounded-lg md:h-79 bg-red-100 shadow-md p-6 ">
-        {items.map((item, index) => (
+      <div style={{ backgroundColor: '#FEF9D9' }} className="relative h-56 overflow-hidden rounded-lg md:h-79 bg-red-100 shadow-md p-4">
+        {interviews.map((interview, index) => (
           <div
             key={index}
-            className={`${
-              index === currentIndex ? 'block' : 'hidden'
-            } absolute block w-full h-full flex flex-col items-center justify-center duration-700 ease-in-out`}
+            className={`${index === currentIndex ? 'block' : 'hidden'} absolute block w-full h-full flex flex-col items-center justify-start py-6 duration-700 ease-in-out`}
           >
-            <h2 className="text-xl font-bold mb-4">{item.title}</h2>
-            <p className="mb-6">{item.description}</p>
+            <h2 className="text-xl font-bold ">{interview.requirement} Interview Board</h2>
+            <p className='w-[70%] text-center'>You have been invited to an interview for the subject  {interview.requirement}</p>
+            <p className="mb-4">Date: {new Date(interview.date).toLocaleDateString()}</p>
             <div>
               <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-5 hover:bg-green-600">
                 Accept

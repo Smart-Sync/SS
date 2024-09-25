@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     element:  localStorage.getItem("authToken")?<ExpertsProfilePage/>:null,
   },
   {
-    path: "/expert/homepage",
+    path: "/expert/homepage/:expertId",
     element:localStorage.getItem("authToken")?<ExpertHomePage/>:null,
   },
   {
