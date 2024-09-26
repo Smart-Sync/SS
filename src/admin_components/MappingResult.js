@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // To get the board ID from the URL
 import Card from '@mui/material/Card';
@@ -7,12 +6,13 @@ import Avatar from '@mui/material/Avatar';
 import { indigo } from '@mui/material/colors';
 import Button from '@mui/material/Button';
 
-export const MappingResult = ({ id }) => {
+export const MappingResult = () => {
+  const { id } = useParams(); // Use the id from the URL params
   const [status, setStatus] = useState({});
   const [boardDetails, setBoardDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  var formatted;
+
   // Fetch board details on component mount
   useEffect(() => {
     const fetchBoardDetails = async () => {
@@ -25,7 +25,9 @@ export const MappingResult = ({ id }) => {
 
           const initialStatus = {};
           data.experts.forEach(expert => {
-            initialStatus[expert.name] = 'Notify';
+            // Initialize status based on fetched data
+            initialStatus[expert.name] = expert.acceptanceStatus === 'approved' ? 'approved' :
+                                         expert.acceptanceStatus === 'rejected' ? 'rejected' : 'Notify';
           });
           setStatus(initialStatus); // Set the initial status in the state
 
@@ -47,8 +49,6 @@ export const MappingResult = ({ id }) => {
   // Function to notify expert (upon button click)
   const notifyExpert = async (name, email, token) => {
     try {
-      console.log("Entered ")
-      // Only change status when notify button is clicked
       setStatus(prevStatus => ({
         ...prevStatus,
         [name]: 'pending', // Set this expert's status to pending after clicking Notify
@@ -63,29 +63,23 @@ export const MappingResult = ({ id }) => {
           expertName: name,
           recipientEmail: email,
           token: token,
-          token: token,
         }),
       });
 
       const result = await response.json();
-
       // Status will remain 'pending' until the response comes from the expert (via polling)
     } catch (error) {
       console.error("Error notifying expert:", error);
     }
   };
 
-  // Polling for updates, only update status if the expert responded
+  // Polling for updates
   const pollForUpdates = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/board-details/${boardDetails._id}`
-      );
+      const response = await fetch(`http://localhost:5000/api/board-details/${id}`);
       const updatedDetails = await response.json();
 
-      // Only update the status if the expert responded (pending -> accepted/rejected)
       const updatedStatus = {};
-
       updatedDetails.experts.forEach(expert => {
         if (expert.acceptanceStatus === 'approved') {
           updatedStatus[expert.name] = 'approved';
@@ -96,7 +90,7 @@ export const MappingResult = ({ id }) => {
 
       setStatus(prevStatus => ({
         ...prevStatus,
-        ...updatedStatus, // Merge with the previous state, so it only changes when the expert responds
+        ...updatedStatus,
       }));
     } catch (error) {
       console.error("Error polling for updates:", error);
@@ -106,7 +100,7 @@ export const MappingResult = ({ id }) => {
   // Start polling every 10 seconds
   useEffect(() => {
     if (boardDetails) {
-      const interval = setInterval(pollForUpdates, 10000); // Poll every 30 seconds
+      const interval = setInterval(pollForUpdates, 10000); // Poll every 10 seconds
       return () => clearInterval(interval); // Cleanup interval on component unmount
     }
   }, [boardDetails]);
@@ -121,11 +115,9 @@ export const MappingResult = ({ id }) => {
       case 'rejected':
         return { text: 'Rejected', color: '#EF4444', disabled: true };
       default:
-        return { text: 'Notify', color: '#3B82F6', disabled: false }; // Default for 'notified'
+        return { text: 'Notify', color: '#3B82F6', disabled: false };
     }
   };
-
-
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -194,3 +186,4 @@ export const MappingResult = ({ id }) => {
     )
   );
 };
+
