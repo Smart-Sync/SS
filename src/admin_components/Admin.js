@@ -3,9 +3,8 @@ import { Card } from './Card'
 
 export const Admin = () => {
 
-
-  const [boards, setBoards] = useState([]);
-
+  const [boards, setBoards] = useState([]);  
+  const [sortOrder, setSortOrder] = useState('none');
   useEffect(() => {
     // Fetch all boards from the backend
     const fetchBoards = async () => {
@@ -24,7 +23,13 @@ export const Admin = () => {
 
     fetchBoards();
   }, []);
-
+  const sortedBoards = sortOrder === 'none'
+    ? boards
+    : [...boards].sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return sortOrder === 'ascending' ? dateA - dateB : dateB - dateA;
+      });
 
   return (
     <div className="bg-white py-4 sm:py-32 ">
@@ -47,10 +52,22 @@ export const Admin = () => {
         <Card></Card>
         <Card></Card>
       </div> */}
-
+        <div className="flex  mb-8">
+        <label htmlFor="sortOrder" className="mr-3 font-bold text-gray-700">Sort by Date:</label>
+        <select
+          id="sortOrder"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="px-4.5 py-1 rounded border border-gray-300"
+        >
+          <option value="none">None</option>
+          <option value="ascending">Ascending</option>
+          <option value="descending">Descending</option>
+        </select>
+      </div>
       <div className="board-list grid grid-cols-4 gap-4">
-        {boards.length > 0 ? (
-          boards.map((board) => (
+        {sortedBoards.length > 0 ? (
+          sortedBoards.map((board) => (
             <Card key={board._id} board={board} /> // Pass each board as a prop
           ))
         ) : (
