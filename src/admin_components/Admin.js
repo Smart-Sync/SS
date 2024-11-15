@@ -98,7 +98,7 @@ export const Admin = () => {
             <Card key={board._id} board={board} /> // Pass each board as a prop
           ))
         ) : (
-          <div>No boards </div>
+          <div>No boards available</div>
         )}
       </div>
     </div>
