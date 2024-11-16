@@ -40,7 +40,7 @@ export const Navbar = ({ children }) => {
               </DisclosureButton>
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-              <div className="flex flex-shrink-0 items-center">
+              <div className="flex flex-shrink-0 items-center px-4">
                 <img alt="DRDO Logo" src={logo} className="h-12 w-auto" />
               </div>
               <div className="hidden sm:ml-6 sm:block">
@@ -74,7 +74,7 @@ export const Navbar = ({ children }) => {
               </button>
 
               {/* Profile dropdown */}
-              <Menu as="div" className="relative ml-3">
+              <Menu as="div" className="relative ml-3 px-4">
                 <div>
                   <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="absolute -inset-1.5" />

@@ -23,15 +23,6 @@ router.post('/save-details', async (req, res) => {
     for (const [expertName, expertDetails] of Object.entries(experts)) {
       const token = createToken(expertName, requirement, date);
 
-      // expertData[expertName] = {
-      //   email: expertDetails.email,
-      //   candidates: expertDetails.candidates.map(candidate => ({
-      //     Candidate: candidate.Candidate,
-      //     RelevancyScore: candidate['Relevancy Score']
-      //   })),
-      //   acceptanceStatus: expertDetails.acceptanceStatus || false, // Handle acceptanceStatus
-      //   token: token,
-      // };
       expertArray.push({
         name: expertName,
         email: expertDetails.email,
@@ -40,6 +31,7 @@ router.post('/save-details', async (req, res) => {
           RelevancyScore: candidate['Relevancy Score']
         })),
         acceptanceStatus: expertDetails.acceptanceStatus || "pending",
+        scored: false,
         token: token,
       });
     }
