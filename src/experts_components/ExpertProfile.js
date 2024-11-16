@@ -1,225 +1,44 @@
-// src/components/EditProfile.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const EditProfile = () => {
-  const [formData, setFormData] = useState({
-    name: 'Dr. Kamala Sharma',
-    email: '',
-    phone: '',
-    qualifications: '',
-    skills: '', // Change from expertise to skills
-    availability: '',
-    experience: '',
-    profilePic: '', // This will hold the uploaded image as a data URL
-  });
-
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value, type, selectedOptions } = e.target;
-    if (type === 'select-multiple') {
-      const selectedValues = Array.from(selectedOptions).map(option => option.value);
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: selectedValues,
-      }));
-    } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+const ProfilePage = () => {
+  const profileData = {
+  name:  localStorage.getItem("name"),
+  email:  localStorage.getItem("email"),
+  qualifications:  localStorage.getItem("qualifications"),
+   skills: localStorage.getItem("skills"),
+   experience: localStorage.getItem("years_of_expirience"),
+   availability: localStorage.getItem("date_of_availability"),
+    
+   
   };
-
-  // Handle profile picture file change
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prevState => ({
-          ...prevState,
-          profilePic: reader.result, // Set the base64 string of the image
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    alert('Profile Updated Successfully!');
-  };
-
-  const goBack = () => {
-    navigate('/expert/homepage');
-  };
+  console.log(localStorage.getItem("expertId"));
 
   return (
-    <div className="max-w-5xl mx-auto py-10 flex">
-      {/* Left Side - Back Arrow, Profile Picture, and Name */}
-      <button onClick={goBack} className="self-start mb-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="w-6 h-6 text-gray-600 hover:text-gray-900"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15.75 19.5L8.25 12l7.5-7.5"
-          />
-        </svg>
-      </button>
-      <div className="w-1/3 bg-gray-10 p-6 rounded-l-lg flex flex-col items-center h-50">
+    <div className="max-w-3xl mx-auto py-10">
+      <div className="flex items-center space-x-4 mb-6">
         <img
-          src='https://cdn-icons-png.flaticon.com/512/4514/4514882.png'
+          src={profileData.profilePic}
           alt="Profile"
-          className="rounded-full h-20 w-20 object-cover mb-4"
+          className="rounded-full h-20 w-20 object-cover"
         />
-        <h2 className="text-xl font-semibold">{formData.name}</h2>
+        <h1 className="text-2xl font-bold">{profileData.name}</h1>
       </div>
-
-      {/* Right Side - Form */}
-      <div className="w-2/3 bg-white p-6 rounded-r-lg">
-        <h2 className="text-2xl font-semibold mb-6">Edit Profile</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Enter your phone number"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Qualifications */}
-          <div>
-            <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">
-              Qualifications
-            </label>
-            <textarea
-              name="qualifications"
-              id="qualifications"
-              value={formData.qualifications}
-              onChange={handleChange}
-              rows="3"
-              placeholder="Enter your qualifications"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            ></textarea>
-          </div>
-
-          {/* Skills */}
-          <div>
-            <label htmlFor="skills" className="block text-sm font-medium text-gray-700">
-              Skills
-            </label>
-            <input
-              type="text"
-              name="skills"
-              id="skills"
-              value={formData.skills}
-              onChange={handleChange}
-              placeholder="Enter your skills, separated by commas"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-            <small className="text-gray-500">Enter your skills separated by commas.</small>
-          </div>
-                    {/* Experience */}
-                    <div>
-            <label htmlFor="experience" className="block text-sm font-medium text-gray-700">
-              Number of Years of Experience
-            </label>
-            <input
-              type="number"
-              name="experience"
-              id="experience"
-              value={formData.experience}
-              onChange={handleChange}
-              placeholder="Enter your years of experience"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Availability */}
-          <div>
-            <label htmlFor="availability" className="block text-sm font-medium text-gray-700">
-              Availability
-            </label>
-            <input
-              type="date"
-              name="availability"
-              id="availability"
-              value={formData.availability}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex space-x-4">
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
-            >
-              Update Profile
-            </button>
-            <button
-              type="button"
-              onClick={goBack}
-              className="w-full py-2 px-4 bg-gray-500 text-white font-medium rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+      <div className="bg-white shadow rounded-lg p-6 space-y-4">
+        <p><strong>Email:</strong> {profileData.email}</p>
+        <p><strong>Qualifications:</strong> {profileData.qualifications}</p>
+        <p><strong>Skills:</strong> {profileData.skills}</p>
+        <p><strong>Experience:</strong> {profileData.experience}</p>
+        <p><strong>Availability:</strong> {profileData.availability}</p>
       </div>
+      <Link
+        to="/expert/edit-profile"
+        className="mt-6 inline-block px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700"
+      >
+        Edit Profile
+      </Link>
     </div>
   );
 };
 
-export default EditProfile;
+export default ProfilePage;

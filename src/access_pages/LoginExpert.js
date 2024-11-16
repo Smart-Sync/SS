@@ -24,11 +24,21 @@ export const LoginExpert = () => {
     if (!json.success) {
       alert("Enter valid credentials");
     }
+    console.log(json)
     if (json.success) {
       localStorage.setItem("userEmail", credentials.email);
       localStorage.setItem("authToken", json.authToken);
       localStorage.setItem("expertId", json.expertId);
-      console.log(localStorage.getItem("authToken"));
+      localStorage.setItem("name", json.userdata.name);
+      localStorage.setItem("email", json.userdata.email);
+      localStorage.setItem("qualifications", json.userdata.qualifications);
+      localStorage.setItem("skills", json.userdata.skills);
+      localStorage.setItem("years_of_expirience", json.userdata.years_of_experience);
+      localStorage.setItem("date_of_availability", json.userdata.date_of_availability);
+
+    // console.log(localStorage.getItem("date_of_availability"))
+      
+      // console.log(localStorage.getItem("authToken"));
       navigate(`/expert/homepage/${json.expertId}`);
     }
   };
@@ -89,12 +99,7 @@ export const LoginExpert = () => {
               Submit
             </button>
           </form>
-          {/* <p className="mt-10 text-center text-sm text-gray-500">
-        Not a member?{' '}
-        <Link to="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-          Create an Account
-        </Link>
-      </p> */}
+        
         </div>
       </div>
     </>

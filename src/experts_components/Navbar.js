@@ -19,6 +19,7 @@ function classNames(...classes) {
 }
 
 export const Navbar = ({ children }) => {
+ const ExpertId =  localStorage.getItem("expertId")
   return (
     <div>
       <Disclosure as="nav" className="bg-gray-800">
@@ -88,7 +89,7 @@ export const Navbar = ({ children }) => {
                 >
                   <MenuItem>
                     <Link
-                      to="/expert/expert-profile"
+                      to={`/expert/expert-profile/${ExpertId}`}
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                     >
                       Your Profile

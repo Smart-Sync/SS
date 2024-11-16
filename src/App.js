@@ -13,6 +13,7 @@ import { LoginPage } from './access_pages/LoginPage';
 import { SignUpPage } from './access_pages/SignUpPage';
 import { LoginExpert } from './access_pages/LoginExpert';
 import { Admin } from './admin_components/Admin';
+import {ExpertProfilePage} from './expert_pages/ExpertProfilePage'
 
 const router = createBrowserRouter([
   {
@@ -44,8 +45,8 @@ const router = createBrowserRouter([
     element:localStorage.getItem("authToken")?<ExpertHomePage/>:null,
   },
   {
-    path: "/expert/expert-profile",
-    element: localStorage.getItem("authToken")?<ExpertsProfilePage/>:null,
+    path: "/expert/expert-profile/:expertId",
+    element: localStorage.getItem("authToken")?<ExpertProfilePage/>:null,
   },
   { path: "/loginexpert",
     element:<LoginExpert/>

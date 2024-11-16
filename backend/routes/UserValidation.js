@@ -2,7 +2,7 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const router = express.Router();
 const User = require("../models/User");
-const Expert = require("../models/Expert")
+const Expert = require("../models/Expert");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -14,7 +14,7 @@ router.post(
   body("password", "Invalid Password").isLength({ min: 5 }),
   body("name", "Invalid Name").isLength({ min: 5 }),
   async (req, res) => {
-    console.log("****")
+    console.log("****");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -30,7 +30,6 @@ router.post(
         name: req.body.name,
         password: secPassword,
         email: req.body.email,
-
       });
 
       res.json({ success: true });
@@ -63,7 +62,10 @@ router.post(
 
       console.log("User Data:", userdata); // Log user data
 
-      const pwdCompare = await bcrypt.compare(req.body.password, userdata.password);
+      const pwdCompare = await bcrypt.compare(
+        req.body.password,
+        userdata.password
+      );
 
       console.log("Password Comparison Result:", pwdCompare); // Log password comparison result
 
@@ -102,15 +104,19 @@ router.post(
     const { email, password } = req.body;
     try {
       let userdata = await Expert.findOne({ email });
+      
       if (!userdata) {
         return res
           .status(400)
           .json({ errors: "Try logging in with correct Email" });
       }
+      console.log("UserData",userdata)
+    // console.log(" Data:", userdata);
 
-      console.log(" Data:", userdata); 
-
-      const pwdCompare = await bcrypt.compare(req.body.password, userdata.password);
+      const pwdCompare = await bcrypt.compare(
+        req.body.password,
+        userdata.password
+      );
 
       console.log("Password Comparison Result:", pwdCompare); // Log password comparison result
 
@@ -120,17 +126,19 @@ router.post(
           .json({ errors: "Try logging in with correct credentials!" });
       }
 
-      const authToken = jwt.sign({ expertId: userdata._id }, 'secretKey', { expiresIn: '1h' });
+      const authToken = jwt.sign({ expertId: userdata._id }, "secretKey", {
+        expiresIn: "1h",
+      });
 
       // Return success, authToken, and the expert's unique _id
       res.json({
         success: true,
         authToken,
         expertId: userdata._id, // Include expert's _id in the response
+        userdata
       });
-
-
-    } catch (error) {
+    } 
+    catch (error) {
       console.log(error);
       res.status(500).json({ success: false, error: error.message });
     }
