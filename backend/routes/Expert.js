@@ -55,9 +55,9 @@ router.get('/expert/profile/:expertId',  async (req, res) => {
 // Update Expert Profile Route
 router.put("/expert/profile/update/:expertId", async (req, res) => {
   try {
-    const { name, email, qualifications, skills, experience, availability } = req.body;
+    const { name, email, qualifications, skills, years_of_experience, date_of_availability } = req.body;
     const { expertId } = req.params;
-    // Find the expert by ID and update the profile
+    
     const updatedExpert = await Expert.findByIdAndUpdate(
       expertId,
       {
@@ -65,8 +65,8 @@ router.put("/expert/profile/update/:expertId", async (req, res) => {
         email,
         qualifications,
         skills,
-        experience,
-        availability,
+        years_of_experience,
+        date_of_availability,
       },
       { new: true } // Return the updated document
     );
@@ -81,6 +81,7 @@ router.put("/expert/profile/update/:expertId", async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 router.get('/experts/:{email}', async (req, res) => {
   try {
