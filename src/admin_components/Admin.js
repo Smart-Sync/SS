@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { Card } from './Card'
+import React, { useState, useEffect } from 'react';
+import { Card } from './Card';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export const Admin = () => {
-
-
   const [boards, setBoards] = useState([]);
+  const [sortOrder, setSortOrder] = useState('none');
+  const [filterDate, setFilterDate] = useState('');
 
   useEffect(() => {
     // Fetch all boards from the backend
@@ -25,9 +28,26 @@ export const Admin = () => {
     fetchBoards();
   }, []);
 
+  const sortedBoards = sortOrder === 'none'
+    ? boards
+    : [...boards].sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return sortOrder === 'ascending' ? dateA - dateB : dateB - dateA;
+      });
+
+  const filteredBoards = filterDate
+    ? sortedBoards.filter(board => {
+        const boardDate = new Date(board.date);
+        const month = String(boardDate.getMonth() + 1).padStart(2, '0'); // Ensure 2-digit month
+        const year = boardDate.getFullYear();
+        const formattedDate = `${month}-${year}`;
+        return formattedDate === filterDate;
+      })
+    : sortedBoards;
 
   return (
-    <div className="bg-white py-4 sm:py-32 ">
+    <div className="bg-white py-4 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-16">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-600">Interview faster</h2>
@@ -38,19 +58,43 @@ export const Admin = () => {
             DRDO candidate selection Smart Sync Application for admin to manage Candidates and Experts interview using AI and Blockchain.
           </p>
         </div>
-
-
       </div>
-      {/* <div className=" flex flex-row gap-3 mt-12">
-        <Card></Card>
-        <Card></Card>
-        <Card></Card>
-        <Card></Card>
-      </div> */}
 
-      <div className="board-list grid grid-cols-4 gap-4">
-        {boards.length > 0 ? (
-          boards.map((board) => (
+      <div className="flex mb-8 gap-4">
+        <div>
+          <label htmlFor="sortOrder" className="mr-3 ml-4 font-bold text-gray-700">Sort by Date: </label>
+          <select
+            id="sortOrder"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="px-3 py-3 rounded  border-gray-300"
+          >
+            <option value="none">None</option>
+            <option value="ascending">Ascending</option>
+            <option value="descending">Descending</option>
+          </select>
+        </div>
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            views={['month', 'year']}
+            label="Filter by Month and Year"
+            onChange={(newValue) => {
+              if (newValue) {
+                const formattedDate = `${newValue.format('MM')}-${newValue.format('YYYY')}`;
+                setFilterDate(formattedDate);
+              } else {
+                setFilterDate('');
+              }
+            }}
+            className="rounded border border-gray-300"
+          />
+        </LocalizationProvider>
+      </div>
+
+      <div className="board-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {filteredBoards.length > 0 ? (
+          filteredBoards.map((board) => (
             <Card key={board._id} board={board} /> // Pass each board as a prop
           ))
         ) : (
@@ -58,6 +102,5 @@ export const Admin = () => {
         )}
       </div>
     </div>
-
-  )
-}
+  );
+};

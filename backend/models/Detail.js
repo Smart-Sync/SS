@@ -7,7 +7,8 @@ const detailSchema = new Schema({
     date: Date,
     experts: {
         type: Schema.Types.Mixed // Allows for any type of data
-    }
+    },
+    
 });
 
 const Detail = mongoose.model("Detail", detailSchema, "details");
