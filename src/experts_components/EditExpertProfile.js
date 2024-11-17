@@ -1,239 +1,159 @@
-// src/components/EditProfile.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {Link} from "react-router-dom"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const EditExpertProfile = () => {
-  const [formData, setFormData] = useState({
-    name: 'Dr. Kamala Sharma',
-    email: '',
-    password: '',
-    qualifications: '',
-    skills: '', // Change from expertise to skills
-    availability: '',
-    experience: '',
-    profilePic: '', // This will hold the uploaded image as a data URL
+  const navigate = useNavigate();
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return ""; // Handle empty or undefined dates
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Extract the date in yyyy-MM-dd format
+  };
+  const expertId = localStorage.getItem("expertId"); // Assuming expertId is stored
+  const [profileData, setProfileData] = useState({
+    expertId:  "",
+    name:  "",
+    email: "",
+    qualifications: "",
+    skills: "",
+    years_of_experience: "",
+    date_of_availability:  "",
+   
   });
+
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Profile Data
   useEffect(() => {
-    const fetchExpertProfile = async () => {
+    const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/experts/:{email}'); // Change to your actual API endpoint
-        setPeople(response.data); // Assuming the data is an array of experts
+       
+    const response = await fetch(`http://localhost:5000/api/expert/profile/${expertId}`);
+    
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile");
+        }
+    
+        const data = await response.json();
+        setProfileData(data);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching experts:', error);
+        console.error("Error fetching profile:", error);
       }
     };
+    
 
-    fetchExpertProfile();
+    fetchProfile();
   }, []);
 
-  const navigate = useNavigate();
-
+  // Handle Input Change
   const handleChange = (e) => {
-    const { name, value, type, selectedOptions } = e.target;
-    if (type === 'select-multiple') {
-      const selectedValues = Array.from(selectedOptions).map(option => option.value);
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: selectedValues,
-      }));
-    } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+    const { name, value } = e.target;
+    console.log(e.target)
+    setProfileData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  // Handle profile picture file change
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prevState => ({
-          ...prevState,
-          profilePic: reader.result, // Set the base64 string of the image
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e) => {
+  // Handle Form Submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    alert('Profile Updated Successfully!');
+  
+    try {
+      const response = await fetch(`http://localhost:5000/api/expert/profile/update/${expertId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      if (response.ok) {
+        const updatedProfile = await response.json();
+        alert("Profile updated successfully!");
+        console.log(updatedProfile)
+        navigate(-1); // Redirect back to the Profile page
+      } else {
+        console.error("Error updating profile:", response.statusText);
+        alert("Failed to update profile.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
-  const goBack = () => {
-    navigate('/expert/homepage');
-  };
+  if (loading) return <p>Loading profile...</p>;
 
   return (
-    <div className="max-w-5xl mx-auto py-10 flex">
-      {/* Left Side - Back Arrow, Profile Picture, and Name */}
-      <button onClick={goBack} className="self-start mb-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="w-6 h-6 text-gray-600 hover:text-gray-900"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15.75 19.5L8.25 12l7.5-7.5"
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <input
+            type="text"
+            name="name"
+            value={profileData.name}
+            onChange={handleChange}
+            className="mt-1 p-2 w-full border rounded"
           />
-        </svg>
-      </button>
-      <div className="w-1/3 bg-gray-10 p-6 rounded-l-lg flex flex-col items-center h-50">
-        <img
-          src='https://cdn-icons-png.flaticon.com/512/4514/4514882.png'
-          alt="Profile"
-          className="rounded-full h-20 w-20 object-cover mb-4"
-        />
-        <h2 className="text-xl font-semibold">{formData.name}</h2>
-      </div>
-
-      {/* Right Side - Form */}
-      <div className="w-2/3 bg-white p-6 rounded-r-lg">
-        <h2 className="text-2xl font-semibold mb-6">Edit Profile</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Enter your phone number"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Qualifications */}
-          <div>
-            <label htmlFor="qualifications" className="block text-sm font-medium text-gray-700">
-              Qualifications
-            </label>
-            <textarea
-              name="qualifications"
-              id="qualifications"
-              value={formData.qualifications}
-              onChange={handleChange}
-              rows="3"
-              placeholder="Enter your qualifications"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            ></textarea>
-          </div>
-
-          {/* Skills */}
-          <div>
-            <label htmlFor="skills" className="block text-sm font-medium text-gray-700">
-              Skills
-            </label>
-            <input
-              type="text"
-              name="skills"
-              id="skills"
-              value={formData.skills}
-              onChange={handleChange}
-              placeholder="Enter your skills, separated by commas"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-            <small className="text-gray-500">Enter your skills separated by commas.</small>
-          </div>
-                    {/* Experience */}
-                    <div>
-            <label htmlFor="experience" className="block text-sm font-medium text-gray-700">
-              Number of Years of Experience
-            </label>
-            <input
-              type="number"
-              name="experience"
-              id="experience"
-              value={formData.experience}
-              onChange={handleChange}
-              placeholder="Enter your years of experience"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Availability */}
-          <div>
-            <label htmlFor="availability" className="block text-sm font-medium text-gray-700">
-              Availability
-            </label>
-            <input
-              type="date"
-              name="availability"
-              id="availability"
-              value={formData.availability}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex space-x-4">
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
-            >
-              Udate Profile
-            </button>
-           
-            <button
-              type="button"
-              onClick={goBack}
-              className="w-full py-2 px-4 bg-gray-500 text-white font-medium rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={profileData.email}
+            onChange={handleChange}
+            className="mt-1 p-2 w-full border rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Qualification</label>
+          <input
+            type="text"
+            name="qualifications"
+            value={profileData.qualifications}
+            onChange={handleChange}
+            className="mt-1 p-2 w-full border rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Skills</label>
+          <textarea
+            name="skills"
+            value={profileData.skills}
+            onChange={handleChange}
+            className="mt-1 p-2 w-full border rounded"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Experience (Years)</label>
+          <input
+            type="text"
+            name="years_of_experience"
+            value={profileData.years_of_experience}
+            onChange={handleChange}
+            className="mt-1 p-2 w-full border rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Date of Availability</label>
+          <input
+            type="date"
+            name="date_of_availability"
+            value={formatDateForInput(profileData.date_of_availability)}
+            onChange={handleChange}
+            className="mt-1 p-2 w-full border rounded"
+          />
+        </div>
+        <button
+          type="submit"
+          className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
+        >
+          Save Changes
+        </button>
+      </form>
     </div>
   );
 };
-
-

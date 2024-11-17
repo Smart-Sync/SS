@@ -1,44 +1,118 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const ProfilePage = () => {
-  const profileData = {
-  name:  localStorage.getItem("name"),
-  email:  localStorage.getItem("email"),
-  qualifications:  localStorage.getItem("qualifications"),
-   skills: localStorage.getItem("skills"),
-   experience: localStorage.getItem("years_of_expirience"),
-   availability: localStorage.getItem("date_of_availability"),
+export const ProfilePage = () => {
+ 
+  const navigate = useNavigate();
+  const expertId = localStorage.getItem("expertId"); // Assuming expertId is stored
+  const [profileData, setProfileData] = useState({
+    expertId: "",
+    name: "",
+    email: "",
+    qualifications: "",
+    skills: "",
+    experience: "",
+    availability: "",
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Profile Data
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+       
+    const response = await fetch(`http://localhost:5000/api/expert/profile/${expertId}`);
     
-   
-  };
-  console.log(localStorage.getItem("expertId"));
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile");
+        }
+    
+        const data = await response.json();
+        setProfileData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+    
+
+    fetchProfile();
+  }, []);
+
+ 
+  if (loading) return <p>Loading profile...</p>;
+
+  
+ 
 
   return (
-    <div className="max-w-3xl mx-auto py-10">
-      <div className="flex items-center space-x-4 mb-6">
-        <img
-          src={profileData.profilePic}
-          alt="Profile"
-          className="rounded-full h-20 w-20 object-cover"
-        />
-        <h1 className="text-2xl font-bold">{profileData.name}</h1>
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      
+
+      {/* Profile Information */}
+      <h1 className="text-3xl font-bold text-gray-900 mb-4">Profile</h1>
+      <div className="mt-6 border-t border-gray-200">
+        <dl className="divide-y divide-gray-200">
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-900">Full Name</dt>
+            <dd className="mt-1 text-sm text-gray-700 sm:mt-0 sm:col-span-2">
+              {profileData.name}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-900">Email Address</dt>
+            <dd className="mt-1 text-sm text-gray-700 sm:mt-0 sm:col-span-2">
+              {profileData.email}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-900">Qualification</dt>
+            <dd className="mt-1 text-sm text-gray-700 sm:mt-0 sm:col-span-2">
+              {profileData.qualifications}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-900">Skills</dt>
+            <dd className="mt-1 text-sm text-gray-700 sm:mt-0 sm:col-span-2">
+              {profileData.skills}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-900">Years of Experience</dt>
+            <dd className="mt-1 text-sm text-gray-700 sm:mt-0 sm:col-span-2">
+              {profileData.years_of_experience}
+            </dd>
+          </div>
+          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-900">Date of Availability</dt>
+            <dd className="mt-1 text-sm text-gray-700 sm:mt-0 sm:col-span-2">
+              {profileData.date_of_availability}
+            </dd>
+          </div>
+        </dl>
       </div>
-      <div className="bg-white shadow rounded-lg p-6 space-y-4">
-        <p><strong>Email:</strong> {profileData.email}</p>
-        <p><strong>Qualifications:</strong> {profileData.qualifications}</p>
-        <p><strong>Skills:</strong> {profileData.skills}</p>
-        <p><strong>Experience:</strong> {profileData.experience}</p>
-        <p><strong>Availability:</strong> {profileData.availability}</p>
+      
+{/* Back Button */}
+<div className="flex justify-center items-center mb-6">
+        <button
+          onClick={() => navigate(-1)} // Go back to the previous page
+          className="px-4 mr-2 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+        >
+          Back
+        </button>
+
+        {/* Edit Button */}
+        <Link
+          // Navigate to edit profile page
+          to={`/expert/edit-profile/${expertId}`}
+          className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
+        >
+          Edit Profile
+        </Link>
       </div>
-      <Link
-        to="/expert/edit-profile"
-        className="mt-6 inline-block px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700"
-      >
-        Edit Profile
-      </Link>
+     
     </div>
   );
 };
-
-export default ProfilePage;

@@ -39,7 +39,7 @@ app.use('/api', result)
 app.use('/api', boards)
 app.use('/api', mail)
 app.use('/api', eachExpert)
-
+app.use('/api',require("./routes/Expert"))
 
 app.get('/',(req,res)=>{
     res.send('Hello World');
