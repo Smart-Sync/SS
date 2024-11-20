@@ -84,7 +84,7 @@ router.post('candidate/apply', upload.fields([
     }
 });
 
-// Get all applications for a candidate
+// Get all applications history for a candidate
 router.get('/candidate/:candidateId', async (req, res) => {
     const { candidateId } = req.params;
 
