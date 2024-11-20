@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './index.css'; // Adjust the path to your CSS file
 
 import App from './App';
 
