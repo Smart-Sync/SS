@@ -6,9 +6,16 @@ import {
 
 import {Login} from './pages/Login';
 import {Dashboard} from './pages/Dashboard';
+import HomePage from './pages/RACDashboard';
 const router = createBrowserRouter([
   {
     path: "/",
+    element: (
+      <HomePage />
+    ),
+  },
+  {
+    path: "/login",
     element: (
       <Login />
     ),

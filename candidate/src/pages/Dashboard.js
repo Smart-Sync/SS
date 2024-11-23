@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import DashboardCand from '../components/DashboardCand';
 
 
 
@@ -31,26 +32,8 @@ export const Dashboard = ()=> {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <h1 className="text-3xl font-bold mb-4">Welcome, {user.username}!</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <button
-  className="p-4 bg-blue-500 text-white rounded-lg shadow-lg"
-  onClick={() => navigate('/view-jobs')}
->
-  View/Apply Jobs
-</button>
-<button
-  className="p-4 bg-green-500 text-white rounded-lg shadow-lg"
-  onClick={() => navigate('/profile-settings')}
->
-  Profile Settings
-</button>
-<button
-  className="p-4 bg-yellow-500 text-white rounded-lg shadow-lg"
-  onClick={() => navigate('/application-history')}
->
-  Application History
-</button>
-  </div>
+      
+  <DashboardCand/>
     </div>
   );
 }
