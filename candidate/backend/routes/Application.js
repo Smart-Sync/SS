@@ -15,36 +15,36 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Submit job application
-router.post('/application', upload.fields([
-    { name: 'resume', maxCount: 1 },
-    { name: 'marksheets', maxCount: 1 },
-    { name: 'aadharCard', maxCount: 1 },
-    { name: 'coverLetter', maxCount: 1 }
-]), async (req, res) => {
-    const { candidateId, jobId, personalDetails, educationDetails, contactDetails } = req.body;
-    const files = req.files;
+// router.post('/application', upload.fields([
+//     { name: 'resume', maxCount: 1 },
+//     { name: 'marksheets', maxCount: 1 },
+//     { name: 'aadharCard', maxCount: 1 },
+//     { name: 'coverLetter', maxCount: 1 }
+// ]), async (req, res) => {
+//     const { candidateId, jobId, personalDetails, educationDetails, contactDetails } = req.body;
+//     const files = req.files;
 
-    try {
-        const application = new Application({
-            candidateId,
-            jobId,
-            personalDetails: JSON.parse(personalDetails),
-            educationDetails: JSON.parse(educationDetails),
-            contactDetails: JSON.parse(contactDetails),
-            documents: {
-                resume: files.resume[0].path,
-                marksheets: files.marksheets[0].path,
-                aadharCard: files.aadharCard[0].path,
-                coverLetter: files.coverLetter?.[0]?.path || null
-            }
-        });
+//     try {
+//         const application = new Application({
+//             candidateId,
+//             jobId,
+//             personalDetails: JSON.parse(personalDetails),
+//             educationDetails: JSON.parse(educationDetails),
+//             contactDetails: JSON.parse(contactDetails),
+//             documents: {
+//                 resume: files.resume[0].path,
+//                 marksheets: files.marksheets[0].path,
+//                 aadharCard: files.aadharCard[0].path,
+//                 coverLetter: files.coverLetter?.[0]?.path || null
+//             }
+//         });
 
-        await application.save();
-        res.status(201).json({ message: 'Application submitted successfully', application });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to submit application' });
-    }
-});
+//         await application.save();
+//         res.status(201).json({ message: 'Application submitted successfully', application });
+//     } catch (err) {
+//         res.status(500).json({ error: 'Failed to submit application' });
+//     }
+// });
 
 // Get all applications for admin
 router.get('/application', async (req, res) => {

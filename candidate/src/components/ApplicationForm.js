@@ -44,7 +44,7 @@ const ApplicationForm = ({ candidateId, jobId }) => {
         });
 
         try {
-            await axios.post('http://localhost:5000/api/applications', data);
+            await axios.post('http://localhost:5000/api/apply', data);
             alert('Application submitted successfully!');
         } catch (err) {
             console.error(err);
