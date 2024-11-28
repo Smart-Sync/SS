@@ -19,6 +19,7 @@ const Expert = require('../models/Expert');
 router.post('/save-details', async (req, res) => {
   try {
     const { requirement, date, experts } = req.body;
+    console.log(experts)
     const expertArray = [];
     for (const [expertName, expertDetails] of Object.entries(experts)) {
       const token = createToken(expertName, requirement, date);

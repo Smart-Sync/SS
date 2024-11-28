@@ -27,7 +27,7 @@ app.post('/api/profile-score', async (req, res) => {
         const response = await axios.post(`${FASTAPI_URL}/compute_profile_score/`, {
                 requirement
         });
-        
+        console.log("Yes")
         res.json(response.data.results);
     } catch (error) {
         res.status(500).json({ error: 'Error connecting to FastAPI service' });

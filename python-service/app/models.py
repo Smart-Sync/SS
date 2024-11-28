@@ -10,6 +10,7 @@ class Candidate(BaseModel):
     years_of_experience: int
     email:str
     password:str
+    ID:int
 
 class Expert(BaseModel):
     name: str
@@ -19,3 +20,4 @@ class Expert(BaseModel):
     qualifications: str
     years_of_experience: int
     date_of_availability: str
+    ID:int

@@ -1,66 +1,76 @@
-import pandas as pd
-import math
-from sklearn.metrics.pairwise import cosine_similarity
-from app.utils import profile_score, relevancy_score, sentence_model
+from ortools.linear_solver import pywraplp
 
-def process_matching(experts_df, candidates_df, interview_subject):
-    """Compute relevancy score between experts and candidates."""
+def optimize_allocation(expert_candidate_relevancy_scores, experts_data, candidates_data):
+    # Get the total number of candidates and experts
+    total_candidates = len(candidates_data)
+    total_experts = len(experts_data)
 
-    experts = experts_df.to_dict(orient='records')
-    # candidates = candidates_df.to_dict(orient='records')
-    # Get expert skills embeddings
-    expert_skills = [expert['skills'] for expert in experts]
-    expert_embeddings = sentence_model.encode(expert_skills)
-    
-    # Get subject embedding
-    subject_embedding = sentence_model.encode([interview_subject])
-    
-    # Compute matching scores between experts and the subject
-    matching_scores = cosine_similarity(expert_embeddings, subject_embedding)
-    
-    # Assign matching scores to experts
-    for idx, expert in enumerate(experts):
-        expert['matching_score'] = matching_scores[idx][0]
+    # Calculate fair capacity
+    fair_capacity = total_candidates // total_experts
+    remainder = total_candidates % total_experts
 
-    # Create DataFrame for ranking
-    experts_df = pd.DataFrame(experts)
-    
-    # Filter experts by availability
-    experts_df = experts_df[experts_df['date_of_availability'] == '2024-09-15']
-    experts_df = experts_df[experts_df['matching_score'] > 0]
+    solver = pywraplp.Solver.CreateSolver('SCIP')
+    if not solver:
+        raise Exception("Solver not initialized!")
 
-    # Sort and select top experts
-    top_experts = experts_df.sort_values(by='matching_score', ascending=False).head(10)
-    print(top_experts)
-    # Calculate profile scores and relevancy scores
-    # allocations = {expert['name']: [] for _, expert in top_experts.iterrows()}  # To store allocated candidates
-    allocations = {expert['name']: {'email': expert['email'], 'candidates': []} for _, expert in top_experts.iterrows()}
+    # Get all expert ids and candidate ids
+    expert_ids = [expert["ID"] for expert in experts_data]
+    candidate_ids = [candidate["ID"] for candidate in candidates_data]
 
-    remaining_candidates = candidates_df.copy()  # Copy to track unallocated candidates
-    threshold = math.ceil(len(candidates_df) / len(top_experts))
+    # Create decision variables (0 or 1 if candidate is assigned to expert)
+    x = {}
+    for c in candidate_ids:
+        for e in expert_ids:
+            x[(c, e)] = solver.BoolVar(f'x_{c}_{e}')
 
-    for _, expert in top_experts.iterrows():
-        expert_name = expert['name']
-        expert_email = expert['email']
-        # Calculate the relevancy score for each candidate
-        candidate_scores = []
-        for _, candidate in remaining_candidates.iterrows():
-            score = profile_score(expert, candidate)
-            candidate_scores.append({
-                'Candidate': candidate['name'],
-                'Relevancy Score': score
-            })
+    # Constraints: Each candidate must be assigned to exactly one expert
+    for c in candidate_ids:
+        solver.Add(solver.Sum(x[(c, e)] for e in expert_ids) == 1)
 
-        # Sort candidates by the relevancy score in descending order
-        sorted_candidates = sorted(candidate_scores, key=lambda x: x['Relevancy Score'], reverse=True)
+    # Constraints: Each expert cannot exceed their fair capacity
+    for i, expert in enumerate(experts_data):
+        expert_id = expert["ID"]
+        # Add extra capacity to the first 'remainder' experts
+        expert_capacity = fair_capacity + 1 if i < remainder else fair_capacity
+        solver.Add(solver.Sum(x[(c, expert_id)] for c in candidate_ids) <= expert_capacity)
 
-        # Allot top 'threshold' candidates to the expert
-        allocated_candidates = sorted_candidates[:threshold]
-        # allocations[expert_name].extend(allocated_candidates)
-        for candidate in allocated_candidates:
-            allocations[expert_name]['candidates'].append(candidate)
+    # Objective: Maximize the total profile score (sum of all x[c, e] * profile_score)
+    objective = solver.Objective()
+    for expert_id, candidate_scores in expert_candidate_relevancy_scores.items():
+        for score in candidate_scores:
+            c = score["candidate_id"]
+            relevancy_score = score["relevancy_score"]
+            objective.SetCoefficient(x[(c, expert_id)], relevancy_score)
 
-        # Remove allocated candidates from the remaining pool
-        remaining_candidates = remaining_candidates[~remaining_candidates['name'].isin([c['Candidate'] for c in allocated_candidates])]
+    objective.SetMaximization()
 
-    return allocations 
+    # Solve the problem
+    status = solver.Solve()
+
+    if status == pywraplp.Solver.OPTIMAL:
+        allocation = {}
+        # Iterate over the candidates and experts and construct the required structure
+        for c in candidate_ids:
+            for e in expert_ids:
+                if x[(c, e)].solution_value() > 0:
+                    # Find the expert and candidate objects by their IDs
+                    candidate = next(candidate for candidate in candidates_data if candidate["ID"] == c)
+                    expert = next(expert for expert in experts_data if expert["ID"] == e)
+                    expert_name = expert["name"]
+                    expert_email = expert["email"]
+                    if expert_name not in allocation:
+                        allocation[expert_name] = {
+                            "email": expert_email,
+                            "candidates": [],
+                            "acceptanceStatus": "pending",  # Default value
+                            "scored": False,
+                        }
+                    allocation[expert_name]["candidates"].append({
+                        "Candidate": candidate["name"],
+                        "Relevancy Score": expert_candidate_relevancy_scores[e][candidate_ids.index(c)]["relevancy_score"]
+                    })
+        return allocation
+    else:
+        # Debugging status code and error message
+        print(f"Solver Status: {status}")
+        return None
