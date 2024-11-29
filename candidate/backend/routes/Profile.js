@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-      cb(null, 'uploads/resumes/'); // Save to the "uploads/resumes" folder
+      cb(null, 'uploads/'); // Save to the "uploads/resumes" folder
   },
   filename: (req, file, cb) => {
       cb(null, `${Date.now()}_${file.originalname}`); // Rename the file to avoid collisions
@@ -41,15 +41,15 @@ router.get('/profile', async (req, res) => {
   });
   
   // Route: Update Profile
-  router.put('/update-profile', async (req, res) => {
+  router.put('/update-profile',  upload.single('resume'),async (req, res) => {
     const token = req.headers['authorization'];
     const { username, email } = req.body;
-    const resumeUrl = req.file ? `/uploads/resumes/${req.file.filename}` : null;
+    const resumeUrl = req.file ? `/uploads/${req.file.filename}` : null;
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      if (!username || !email) {
-        return res.status(400).json({ message: 'Username and email are required' });
-    }
+    //   if (!username || !email) {
+    //     return res.status(400).json({ message: 'Username and email are required' });
+    // }
 
     // Find the candidate by their ID and update their profile
     const updatedCandidate = await Candidate.findByIdAndUpdate(
