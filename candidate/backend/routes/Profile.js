@@ -4,7 +4,7 @@ const Candidate = require("../models/Candidate");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = " kjgruleij9dklii9domkk845509#($* 8mjdfu$$";
+
 // Multer setup for file upload
 
 const storage = multer.diskStorage({
@@ -33,7 +33,7 @@ router.get('/profile', async (req, res) => {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
       const user = await Candidate.findById(decoded.user.id).select('-password'); // Exclude the password
-      const user = await Candidate.findById(decoded.user.id).select('-password'); // Exclude the password
+     // Exclude the password
       res.json(user);
     } catch (error) {
       res.status(401).json({ message: 'Unauthorized' });
@@ -69,4 +69,4 @@ router.get('/profile', async (req, res) => {
 }
   });
 
-  
+  module.exports = router
