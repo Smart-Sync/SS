@@ -7,7 +7,8 @@ const CandidateSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now },
     applications: [
         { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } // References Application model
-    ]
+    ],
+    resume: { type: String, required: true } 
 });
 
 module.exports = mongoose.model('CandidateDatabase', CandidateSchema);
