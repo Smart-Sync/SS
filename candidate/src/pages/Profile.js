@@ -18,6 +18,7 @@ function Profile() {
         setUsername(res.data.username);
         setEmail(res.data.email);
       } catch (error) {
+        console.error(error);
         alert('Failed to fetch profile');
       }
     };
