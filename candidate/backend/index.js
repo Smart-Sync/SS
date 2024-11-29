@@ -18,6 +18,7 @@ app.use('/api', candidateValidation);
 app.use('/api', require('./routes/Job'));
 app.use('/api', require('./routes/Candidate'));
 app.use('/api', require('./routes/Application'));
+app.use('/api',require('./routes/Profile'))
 app.listen(port , ()=>{
     console.log(`App listening on port ${port}`);
 });

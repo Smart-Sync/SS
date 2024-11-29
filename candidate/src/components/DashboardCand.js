@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 const DashboardCand = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const recruitmentData = [
     { id: 1, advt: "Scientist Recruitment", publishDate: "10-Aug-2023", lastDate: "29-Sep-2023", status: "Closed" },
     { id: 2, advt: "Engineer Recruitment", publishDate: "01-Oct-2023", lastDate: "15-Nov-2023", status: "Open" },
@@ -20,9 +22,26 @@ const DashboardCand = () => {
           <div className="flex items-center gap-4">
             <a href="#" className="text-gray-600 hover:text-blue-600">Open Vacancies</a>
             <a href="#" className="text-gray-600 hover:text-blue-600">Download Formats</a>
-            <div className="flex items-center gap-2">
-              <img src="https://via.placeholder.com/40" alt="Profile" className="rounded-full w-10 h-10" />
-              <span>Tanvi Verma</span>
+            <div className="relative">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <img src="https://via.placeholder.com/40" alt="Profile" className="rounded-full w-10 h-10" />
+                <span>Tanvi Verma</span>
+              </div>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 bg-white shadow-lg rounded w-48">
+                  <ul className="py-2">
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      <a href="/profile-settings">View Profile</a>
+                    </li>
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      <a href="/logout">Logout</a>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>

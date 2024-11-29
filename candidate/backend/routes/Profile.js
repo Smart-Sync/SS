@@ -27,10 +27,12 @@ const upload = multer({
 });
 
 // Route: Get Profile
+const JWT_SECRET = " kjgruleij9dklii9domkk845509#($* 8mjdfu$$";
 router.get('/profile', async (req, res) => {
     const token = req.headers['authorization'];
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
+      const user = await Candidate.findById(decoded.user.id).select('-password'); // Exclude the password
       const user = await Candidate.findById(decoded.user.id).select('-password'); // Exclude the password
       res.json(user);
     } catch (error) {

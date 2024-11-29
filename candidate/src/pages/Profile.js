@@ -21,6 +21,7 @@ function Profile() {
         setEmail(res.data.email);
         setResumeUrl(res.data.resume); // Assuming the resume URL is part of the response
       } catch (error) {
+        console.error(error);
         alert('Failed to fetch profile');
       }
     };
