@@ -3,9 +3,9 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
-import {Login} from './pages/Login';
-import {Dashboard} from './pages/Dashboard';
+import {UserProvider} from './UserContext';
+import { Login } from './pages/Login';
+import { Dashboard } from './pages/Dashboard';
 import HomePage from './pages/RACDashboard';
 const router = createBrowserRouter([
   {
@@ -44,13 +44,15 @@ const router = createBrowserRouter([
       <Dashboard />
     ),
   },
- 
-  
+
+
 ]);
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   );
 }
 

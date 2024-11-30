@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
-
-const CandidateSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+const CandidateSchema = new Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true },
     password: { type: String, required: true },
-    date: { type: Date, default: Date.now },
+    job_position: { type: String, required: true }, // Job position field
+    skills: { type: String, required: true }, // Skills as a comma-separated string
+    qualifications: { type: String, required: true }, // Educational qualifications
+    years_of_experience: { type: Number, required: true }, // Number of years of experience
+    ID: { type: Number, required: true, unique: true }, // Unique ID for the candidate
+    date: { type: Date, default: Date.now }, // Default timestamp
     applications: [
         { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } // References Application model
     ]
 });
+const Candidate = mongoose.model('Candidate', CandidateSchema, 'candidates');
 
-module.exports = mongoose.model('CandidateDatabase', CandidateSchema);
+module.exports = Candidate;
