@@ -20,18 +20,17 @@ const DashboardCand = () => {
         <div className="container mx-auto flex justify-between items-center p-4">
           <div className="text-xl font-bold">DRDO</div>
           <div className="flex items-center gap-4">
-            <a href="#" className="text-gray-600 hover:text-blue-600">Open Vacancies</a>
+            <a href="/view-jobs" className="text-gray-600 hover:text-blue-600">Open Vacancies</a>
             <a href="#" className="text-gray-600 hover:text-blue-600">Download Formats</a>
             <div className="relative">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
+              <img
+                src="/img/download.jpg"
+                alt="User Profile"
+                className="h-10 w-10 rounded-full cursor-pointer"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <img src="https://via.placeholder.com/40" alt="Profile" className="rounded-full w-10 h-10" />
-                <span>Tanvi Verma</span>
-              </div>
+              />
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white shadow-lg rounded w-48">
+                <div className="absolute right-0 mt-2 bg-white shadow-lg rounded w-48 z-10">
                   <ul className="py-2">
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                       <a href="/profile-settings">View Profile</a>
@@ -69,7 +68,7 @@ const DashboardCand = () => {
           <thead>
             <tr className="bg-gray-200">
               <th className="p-2 border">Sr. No.</th>
-              <th className="p-2 border">Advertisement</th>
+              <th className="p-2 border">Job Postings</th>
               <th className="p-2 border">Publish Date</th>
               <th className="p-2 border">Last Date to Apply</th>
               <th className="p-2 border">Actions</th>
