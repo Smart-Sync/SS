@@ -3,10 +3,10 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
-import {Login} from './pages/Login';
+import {UserProvider} from './UserContext';
+import { Login } from './pages/Login';
 import Profile from './pages/Profile'
-import {Dashboard} from './pages/Dashboard';
+import { Dashboard } from './pages/Dashboard';
 import HomePage from './pages/RACDashboard';
 import JobList from './components/JobList';
 const router = createBrowserRouter([
@@ -46,13 +46,15 @@ const router = createBrowserRouter([
       <Dashboard />
     ),
   },
- 
-  
+
+
 ]);
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   );
 }
 
