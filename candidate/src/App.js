@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import {UserProvider} from './UserContext';
 import { Login } from './pages/Login';
+import Profile from './pages/Profile'
 import { Dashboard } from './pages/Dashboard';
 import HomePage from './pages/RACDashboard';
 const router = createBrowserRouter([
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
   {
     path: '/profile-settings',
     element: (
-      <Dashboard />
+      <Profile/>
     ),
   },
   {

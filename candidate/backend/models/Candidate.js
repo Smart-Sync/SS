@@ -12,7 +12,8 @@ const CandidateSchema = new Schema({
     date: { type: Date, default: Date.now }, // Default timestamp
     applications: [
         { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } // References Application model
-    ]
+    ],
+    resume: { type: String, required: true } 
 });
 const Candidate = mongoose.model('Candidate', CandidateSchema, 'candidates');
 
