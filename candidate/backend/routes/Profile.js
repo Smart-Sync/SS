@@ -3,7 +3,9 @@ const router = express.Router();
 const Candidate = require("../models/Candidate");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
-
+const { extractData } = require('../ResumeParser');
+const fs = require('fs');
+const pdfParse = require('pdf-parse'); // For PDF parsing
 
 // Multer setup for file upload
 
@@ -44,20 +46,29 @@ router.get('/profile', async (req, res) => {
   router.put('/update-profile',  upload.single('resume'),async (req, res) => {
     const token = req.headers['authorization'];
     const { username, email } = req.body;
-    const resumeUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
-    //   if (!username || !email) {
-    //     return res.status(400).json({ message: 'Username and email are required' });
-    // }
+      const filePath = req.file.path;
+    const fileBuffer = fs.readFileSync(filePath);
 
-    // Find the candidate by their ID and update their profile
+    let text;
+  
+      const parsed = await pdfParse(fileBuffer);
+      text = parsed.text;
+   
+
+    // Extract data
+    const parsedData = extractData(text);
+      console.log("parsedDAta",parsedData)
     const updatedCandidate = await Candidate.findByIdAndUpdate(
         decoded.user.id,
         {
             name: username,
             email,
-            resume: resumeUrl || undefined, // If resume is provided, update it
+            resume: filePath || undefined, // If resume is provided, update it
+            skills:parsedData.skills,
+            qualifications:parsedData.qualifications
         },
         { new: true }
     ).select('-password'); // Exclude password from the response
