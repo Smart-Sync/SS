@@ -4,14 +4,15 @@ const CandidateSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    job_position: { type: String, required: true }, // Job position field
-    skills: { type: [String], required: true }, // Skills as a comma-separated string
-    qualifications: { type: [String], required: true }, // Educational qualifications
-    years_of_experience: { type: Number, required: true }, // Number of years of experience
-    ID: { type: Number, required: true, unique: true }, // Unique ID for the candidate
-    date: { type: Date, default: Date.now }, // Default timestamp
+    job_position: { type: String, required: true },
+    skills: { type: [String], required: true }, 
+    qualifications: { type: [String], required: true }, 
+    years_of_experience: { type: Number, required: true }, 
+    specialisation: { type: [String], required: true }, 
+    ID: { type: Number, required: true, unique: true },
+    date: { type: Date, default: Date.now }, 
     applications: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } // References Application model
+        { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } 
     ],
     resume: { type: String, required: true } 
 });

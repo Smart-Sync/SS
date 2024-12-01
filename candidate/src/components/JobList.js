@@ -1,44 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from "react";
 
-const JobList = () => {
-    const [jobs, setJobs] = useState([]);
-    const candidateId = "YOUR_CANDIDATE_ID"; // Replace with logged-in candidate's ID
+const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
+  // Group jobs by their jobType
+  const groupJobsByType = (jobs) => {
+    return jobs.reduce((acc, job) => {
+      if (!acc[job.jobType]) {
+        acc[job.jobType] = [];
+      }
+      acc[job.jobType].push(job);
+      return acc;
+    }, {});
+  };
 
-    useEffect(() => {
-        const fetchJobs = async () => {
-            const res = await axios.get('http://localhost:5000/api/jobs');
-            setJobs(res.data);
-        };
-        fetchJobs();
-    }, []);
+  const jobsGroupedByType = groupJobsByType(jobs);
 
-    const applyForJob = async (jobId) => {
-        try {
-            await axios.post('http://localhost:5000/api/candidates/apply', {
-                candidateId,
-                jobId
-            });
-            alert('Applied successfully!');
-        } catch (err) {
-            console.error(err);
-        }
-    };
+  return (
+    <div className="container mx-auto mt-6 bg-white shadow rounded p-6">
+      {/* Search Input */}
+      <div className="mb-6 flex justify-between items-center">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="w-full border border-gray-300 rounded-lg p-2"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
-    return (
-        <div>
-            <h1>Job Listings</h1>
-            <ul>
-                {jobs.map(job => (
-                    <li key={job._id}>
-                        <h2>{job.title}</h2>
-                        <p>{job.description}</p>
-                        <button onClick={() => applyForJob(job._id)}>Apply</button>
-                    </li>
+      {/* Job Listings */}
+      <div>
+        {Object.keys(jobsGroupedByType).map((jobType) => {
+          const jobsOfType = jobsGroupedByType[jobType];
+
+          return (
+            <div key={jobType} className="mt-10">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">{jobType}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {jobsOfType.map((job, index) => (
+                  <div
+                    key={job._id}
+                    className="bg-gray-100 shadow-lg rounded-lg p-6 flex flex-col"
+                  >
+                    {/* Serial Number */}
+                    <div className="text-gray-800 text-lg font-medium mb-2 text-center">
+                      <strong>Sr. No:</strong> {index + 1}
+                    </div>
+
+                    {/* Advertisement */}
+                    <div className="text-center text-lg font-bold text-gray-800 mb-4">
+                      {job.advt}
+                    </div>
+
+                   
+
+                    {/* Job Description */}
+                    <p className="text-sm text-gray-600 text-center mb-4">
+                      {job.description.substring(0, 100)}...
+                    </p>
+
+                    {/* Publish Date & Last Date */}
+                    <div className="text-sm text-gray-500 mb-4 text-center">
+                      <p>
+                        <strong>Published:</strong>{" "}
+                        {new Date(job.publishDate).toLocaleDateString()}
+                      </p>
+                      <p>
+                        <strong>Apply By:</strong>{" "}
+                        {new Date(job.lastDate).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex justify-center gap-4 mt-auto">
+                      <button
+                        className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition ${
+                          job.status === "Closed"
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : ""
+                        }`}
+                        disabled={job.status === "Closed"}
+                      >
+                        {job.status === "Closed" ? "Closed" : "Apply"}
+                      </button>
+                    </div>
+                  </div>
                 ))}
-            </ul>
-        </div>
-    );
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default JobList;
