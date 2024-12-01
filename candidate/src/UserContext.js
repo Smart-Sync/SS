@@ -9,9 +9,14 @@ export const useUser = () => {
 
 // UserProvider component to provide context to the app
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(localStorage.getItem("user") || null); // Get user from localStorage if available
+  const [user, setUser] = useState(() => {
+    // Parse the user from localStorage, or return null if not available
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
   const [token, setToken] = useState(localStorage.getItem('token') || null);
 
+  
   const login = (userData, authToken) => {
     localStorage.setItem('token', authToken);
     localStorage.setItem("user", JSON.stringify(userData)); // Store user in localStorage

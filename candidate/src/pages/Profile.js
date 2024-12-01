@@ -1,43 +1,49 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useUser } from "../UserContext.js"; // Import the custom hook
 
 function Profile() {
-  const [user, setUser] = useState(null);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const { user, setUser, token } = useUser(); // Access user and token from context
+  const [username, setUsername] = useState( user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
   const [isEditing, setIsEditing] = useState(false);
   const [resume, setResume] = useState(null);
   const [resumePreview, setResumePreview] = useState("");
   const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        setLoading(true);
-        const res = await axios.get(`http://localhost:5000/api/profile`, {
-          headers: { Authorization: token },
-        });
-        setUser(res.data);
-        setUsername(res.data.name);
-        setEmail(res.data.email);
-        setResumeUrl(res.data.resume);
-      } catch (error) {
-        console.error(error);
-        alert("Failed to fetch profile");
-      } finally {
-        setLoading(false);
-      } 
-    };
-    fetchProfile();
-  }, [user]);
+    if (!user) {
+      // If user is not available in context, fetch it from the API
+      const fetchProfile = async () => {
+        try {
+          setLoading(true);
+          const res = await axios.get(`http://localhost:5000/api/profile`, {
+            headers: { Authorization: token },
+          });
+          setUser(res.data); // Update user context with fetched data
+          setUsername(res.data.name);
+          setEmail(res.data.email);
+        } catch (error) {
+          console.error(error);
+          alert("Failed to fetch profile");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProfile();
+    } else {
+      // If user is available in context, set local state
+      setUsername(user.name);
+      setEmail(user.email);
+      setLoading(false);
+    }
+  }, [user, setUser, token]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.type !== 'application/pdf') {
-        return alert('Please upload a valid PDF file.');
+      if (file.type !== "application/pdf") {
+        return alert("Please upload a valid PDF file.");
       }
       setResume(file);
       setResumePreview(URL.createObjectURL(file)); // Show the local preview before upload
@@ -46,38 +52,36 @@ function Profile() {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
     const formData = new FormData();
     formData.append("username", username);
     formData.append("email", email);
     if (resume) {
-      formData.append('resume', resume);
+      formData.append("resume", resume);
     }
 
     try {
       setLoading(true);
       const res = await axios.put(`http://localhost:5000/api/update-profile`, formData, {
-        headers: { Authorization: token, 'Content-Type': 'multipart/form-data' },
+        headers: { Authorization: token, "Content-Type": "multipart/form-data" },
       });
-      setUser(res.data);
-      setResumeUrl(res.data.resume);
+      setUser(res.data); // Update user context after profile update
       setIsEditing(false);
       alert("Profile updated successfully!");
     } catch (error) {
       console.error(error);
       alert("Failed to update profile");
+    } finally {
+      setLoading(false);
     }
   };
 
   const cancelEdit = () => {
     setIsEditing(false);
     setResume(null);
-    setResumePreview('');
+    setResumePreview("");
   };
 
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg p-6">
@@ -118,7 +122,7 @@ function Profile() {
 
           <button
             className="px-4 py-2 bg-green-500 text-white rounded"
-            onClick={updateProfile}
+            onClick={handleUpdateProfile}
           >
             Save
           </button>
@@ -132,14 +136,14 @@ function Profile() {
       ) : (
         <div className="space-y-4">
           <p className="text-lg">
-            <strong>Username:</strong> {user.name || username}
+            <strong>Username:</strong> {user ? user.name : username}
           </p>
           <p className="text-lg">
-            <strong>Email:</strong> {user.email || email}
+            <strong>Email:</strong> {user ? user.email : email}
           </p>
           <p className="text-lg">
             <strong>Resume:</strong>{" "}
-            {resumeUrl ? (
+            {user && user.resume ? (
               <a
                 href={user.resume}
                 target="_blank"
