@@ -53,6 +53,7 @@ router.get('/profile', async (req, res) => {
     const { username, email } = req.body;
     let resumeUrl = null;
     if (req.file) {
+      console.log("file",req.file.path)
       try {
         // Upload the file to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path, {
@@ -61,7 +62,7 @@ router.get('/profile', async (req, res) => {
         resumeUrl = result.secure_url;
   
         // Clean up the local file
-        fs.unlinkSync(req.file.path);
+        
       } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Failed to upload file' });
@@ -82,6 +83,7 @@ router.get('/profile', async (req, res) => {
       // Extract data
       const parsedData = extractData(text);
         console.log("parsedDAta",parsedData)
+        fs.unlinkSync(req.file.path);
       
     //   if (!username || !email) {
     //     return res.status(400).json({ message: 'Username and email are required' });
