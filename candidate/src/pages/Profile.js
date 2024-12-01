@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function Profile() {
   const [user, setUser] = useState(null);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [resume, setResume] = useState(null);
-  const [resumePreview, setResumePreview] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [resumePreview, setResumePreview] = useState("");
+  const [loading, setLoading] = useState(true);
 
   
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       try {
         setLoading(true);
         const res = await axios.get(`http://localhost:5000/api/profile`, {
@@ -22,12 +22,13 @@ function Profile() {
         setUser(res.data);
         setUsername(res.data.name);
         setEmail(res.data.email);
+        setResumeUrl(res.data.resume);
       } catch (error) {
         console.error(error);
-        alert('Failed to fetch profile');
+        alert("Failed to fetch profile");
       } finally {
         setLoading(false);
-      }
+      } 
     };
     fetchProfile();
   }, [user]);
@@ -43,11 +44,12 @@ function Profile() {
     }
   };
 
-  const updateProfile = async () => {
-    const token = localStorage.getItem('token');
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
     const formData = new FormData();
-    formData.append('username', username);
-    formData.append('email', email);
+    formData.append("username", username);
+    formData.append("email", email);
     if (resume) {
       formData.append('resume', resume);
     }
@@ -58,12 +60,12 @@ function Profile() {
         headers: { Authorization: token, 'Content-Type': 'multipart/form-data' },
       });
       setUser(res.data);
+      setResumeUrl(res.data.resume);
       setIsEditing(false);
-      alert('Profile updated successfully');
+      alert("Profile updated successfully!");
     } catch (error) {
-      alert('Failed to update profile');
-    } finally {
-      setLoading(false);
+      console.error(error);
+      alert("Failed to update profile");
     }
   };
 
@@ -73,13 +75,13 @@ function Profile() {
     setResumePreview('');
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+    <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg p-6">
+      <h1 className="text-3xl font-bold text-center mb-6">Profile</h1>
       {isEditing ? (
         <div className="space-y-4">
           <input
@@ -128,12 +130,16 @@ function Profile() {
           </button>
         </div>
       ) : (
-        <div>
-          <p><strong>Username:</strong> {user.name}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p>
-            <strong>Resume:</strong>{' '}
-            {user.resume ? (
+        <div className="space-y-4">
+          <p className="text-lg">
+            <strong>Username:</strong> {user.name || username}
+          </p>
+          <p className="text-lg">
+            <strong>Email:</strong> {user.email || email}
+          </p>
+          <p className="text-lg">
+            <strong>Resume:</strong>{" "}
+            {resumeUrl ? (
               <a
                 href={user.resume}
                 target="_blank"
@@ -143,15 +149,17 @@ function Profile() {
                 View Resume
               </a>
             ) : (
-              'No resume uploaded'
+              "No resume uploaded"
             )}
           </p>
-          <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit Profile
-          </button>
+          <div className="flex justify-center mt-6">
+            <button
+              className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </button>
+          </div>
         </div>
       )}
     </div>
