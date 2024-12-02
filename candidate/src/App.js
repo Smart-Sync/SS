@@ -43,12 +43,7 @@ const router = createBrowserRouter([
       <JobApply />
     ),
   },
-  {
-    path: '/apply/:jodId',
-    element: (
-      <JobApply />
-    ),
-  },
+  
   {
     path: '/profile-settings',
     element: (

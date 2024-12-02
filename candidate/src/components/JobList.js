@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
+  
+  const navigate = useNavigate();
   // Group jobs by their jobType
   const groupJobsByType = (jobs) => {
     return jobs.reduce((acc, job) => {
@@ -13,6 +16,10 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
   };
 
   const jobsGroupedByType = groupJobsByType(jobs);
+  const handleApply = (jobId) => {
+    navigate(`/apply/${jobId}`); // Navigate to multi-step form with jobId
+  };
+  
 
   return (
     <div className="container mx-auto mt-6 bg-white shadow rounded p-6">
@@ -79,6 +86,7 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
                             : ""
                         }`}
                         disabled={job.status === "Closed"}
+                        onClick={()=> handleApply(job._id)}
                       >
                         {job.status === "Closed" ? "Closed" : "Apply"}
                       </button>

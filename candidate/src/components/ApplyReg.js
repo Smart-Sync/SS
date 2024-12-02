@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { useUser } from '../UserContext';
 
 export const ApplyReg = ({ formData, onNext }) => {

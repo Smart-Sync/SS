@@ -40,11 +40,7 @@ const DashboardCand = () => {
     }, {});
   }; 
 
-  const jobsGroupedByType = groupJobsByType(jobs);
-
-  const handleApply = (jobId) => {
-    navigate(`/apply/${jobId}`); // Navigate to multi-step form with jobId
-  };
+  
   
   return (
     <div className="bg-gray-100 min-h-screen">
