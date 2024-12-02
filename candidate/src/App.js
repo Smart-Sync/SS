@@ -8,7 +8,9 @@ import { Login } from './pages/Login';
 import Profile from './pages/Profile'
 import { Dashboard } from './pages/Dashboard';
 import HomePage from './pages/RACDashboard';
-import JobList from './components/JobList';
+import OpenVacancies from './components/OpenVacancies';
+import ApplicationForm from './components/ApplicationForm';
+import ApplicationStatus from './components/ApplicationStatus';
 import { JobApply } from './pages/JobApply';
 const router = createBrowserRouter([
   {
@@ -32,7 +34,13 @@ const router = createBrowserRouter([
   {
     path: '/view-jobs',
     element: (
-      <JobList />
+      <OpenVacancies />
+    ),
+  },
+  {
+    path: '/apply/:jodId',
+    element: (
+      <JobApply />
     ),
   },
   {
@@ -50,7 +58,7 @@ const router = createBrowserRouter([
   {
     path: '/application-history',
     element: (
-      <Dashboard />
+      <ApplicationStatus></ApplicationStatus>
     ),
   },
 

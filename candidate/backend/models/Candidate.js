@@ -14,7 +14,7 @@ const CandidateSchema = new Schema({
     ID: { type: Number, required: true, unique: true }, // Unique ID for the candidate
     date: { type: Date, default: Date.now }, // Default timestamp
     applications: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } // References Application model
+        { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } 
     ],
     resume: { type: String, required: true } 
 });
