@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import { Dashboard } from './pages/Dashboard';
 import HomePage from './pages/RACDashboard';
 import JobList from './components/JobList';
+import { JobApply } from './pages/JobApply';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,6 +33,12 @@ const router = createBrowserRouter([
     path: '/view-jobs',
     element: (
       <JobList />
+    ),
+  },
+  {
+    path: '/apply/:jodId',
+    element: (
+      <JobApply />
     ),
   },
   {

@@ -4,6 +4,9 @@ const CandidateSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    dob: {type: Date, required : true},
+    mobile:{type: Number, required:true},
+    address:{type:String, required:true},
     job_position: { type: String, required: true }, // Job position field
     skills: { type: String, required: true }, // Skills as a comma-separated string
     qualifications: { type: String, required: true }, // Educational qualifications

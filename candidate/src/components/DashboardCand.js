@@ -51,6 +51,10 @@ const DashboardCand = () => {
 
   const jobsGroupedByType = groupJobsByType(jobs);
 
+  const handleApply = (jobId) => {
+    navigate(`/apply/${jobId}`); // Navigate to multi-step form with jobId
+  };
+  
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Navbar */}
@@ -142,7 +146,12 @@ const DashboardCand = () => {
                         <td className="p-2 border">{new Date(job.lastDate).toLocaleDateString()}</td>
                         <td className="p-2 border">{job.description}</td>
                         <td className="p-2 border">
-                          <button className={`text-white p-2 rounded ${job.status === 'Closed' ? 'bg-gray-400' : 'bg-blue-500'}`}>
+                          <button
+                            className={`text-white p-2 rounded ${job.status === 'Closed' ? 'bg-gray-400' : 'bg-blue-500'}`}
+                            disabled={job.status === "Closed"}
+                            onClick={()=> handleApply(job._id)}
+                          >
+
                             {job.status === 'Closed' ? 'Closed' : 'Apply'}
                           </button>
                         </td>
