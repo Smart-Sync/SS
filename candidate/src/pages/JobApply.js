@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { ApplyReg } from '../components/ApplyReg';
 import { ApplyQualif } from '../components/ApplyQualif';
 import { ApplyDoc } from '../components/ApplyDoc';
 import { ApplyFinal } from '../components/ApplyFinal';
+import { useLocation, useParams } from 'react-router-dom';
 
 export const JobApply = () => {
-    const { jobId } = useParams();
+    const location = useLocation();
+    const jobId = location.state?.jobId || '';
+    
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({
         jobId,
@@ -24,11 +26,7 @@ export const JobApply = () => {
         setCurrentStep((prev) => prev - 1);
     };
 
-    const handleSubmit = () => {
-        console.log("Final Form Data: ", formData);
-        // Add your API call here to submit the data to the backend
-    };
-
+    
     const renderStep = () => {
         switch (currentStep) {
             case 1:
@@ -54,7 +52,6 @@ export const JobApply = () => {
                     <ApplyFinal
                         formData={formData}
                         onPrevious={handlePrevious}
-                        onSubmit={handleSubmit}
                     />
                 );
             default:

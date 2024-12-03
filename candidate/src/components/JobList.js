@@ -17,7 +17,8 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
 
   const jobsGroupedByType = groupJobsByType(jobs);
   const handleApply = (jobId) => {
-    navigate(`/apply/${jobId}`); // Navigate to multi-step form with jobId
+    
+    navigate(`/apply/${jobId}`, {state: {jobId} }); // Navigate to multi-step form with jobId
   };
   
 

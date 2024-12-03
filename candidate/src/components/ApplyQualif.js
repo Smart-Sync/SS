@@ -11,7 +11,7 @@ export const ApplyQualif = ({ formData, onNext, onPrevious }) => {
         experienceYears: '',
 
     });
-
+    
     const handleChange = (field, value) => {
         setQualification((prev) => ({
             ...prev,
@@ -28,6 +28,10 @@ export const ApplyQualif = ({ formData, onNext, onPrevious }) => {
     };
 
     const handleNext = () => {
+        if(!qualification.gateScore || !qualification.highSchool || !qualification.higherSecondary || !qualification.degree || !qualification.skills){
+            alert('Please complete all the entries!')
+            return;
+        }
         onNext({ qualification });
     };
 
@@ -44,6 +48,7 @@ export const ApplyQualif = ({ formData, onNext, onPrevious }) => {
                     value={qualification.gateScore}
                     onChange={(e) => handleChange('gateScore', e.target.value)}
                     className="border p-2 rounded "
+                    required
                 />
             </div>
 

@@ -82,7 +82,7 @@ router.get('/profile', async (req, res) => {
   
       // Extract data
       const parsedData = extractData(text);
-        console.log("parsedDAta",parsedData)
+        console.log("parsedData",parsedData)
         fs.unlinkSync(req.file.path);
       
     //   if (!username || !email) {

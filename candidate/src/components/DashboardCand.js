@@ -49,8 +49,8 @@ const DashboardCand = () => {
         <div className="container mx-auto flex justify-between items-center p-4">
           <div className="text-xl font-bold">DRDO</div>
           <div className="flex items-center gap-4">
-            <Link to="/view-jobs" className="text-gray-600 hover:text-blue-600">Open Vacancies</Link>
-            <Link to="/application-history" className="text-gray-600 hover:text-blue-600">Application Hisrory</Link>
+            
+            <Link to="/application-history" className="text-gray-600 hover:text-blue-600">Application History</Link>
 
             {/* Profile Dropdown Menu */}
             <Menu as="div" className="relative">

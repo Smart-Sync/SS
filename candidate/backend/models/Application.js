@@ -12,7 +12,7 @@ const ApplicationSchema = new mongoose.Schema({
     required: true,
   },
   qualifications: {
-    gateScore: { type: Number, required: false },
+    gateScore: { type: Number, required: true },
     highSchool: { type: Number, required: true },
     higherSecondary: { type: Number, required: true },
     degree: { type: String, required: true },

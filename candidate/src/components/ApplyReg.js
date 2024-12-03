@@ -8,7 +8,7 @@ export const ApplyReg = ({ formData, onNext }) => {
         mobile: '',
         address: '',
     });
-
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setPersonalInfo((prev) => ({
@@ -18,6 +18,10 @@ export const ApplyReg = ({ formData, onNext }) => {
     };
 
     const handleNext = () => {
+        if(!personalInfo.dob || !personalInfo.mobile || !personalInfo.address){
+            alert("Complete all entries")
+            return;
+        }
         onNext({ personalInfo });
     };
 
@@ -68,7 +72,7 @@ export const ApplyReg = ({ formData, onNext }) => {
                 <label>Address:</label>
                 <input
                     type="text"
-                    name="Address"
+                    name="address"
                     value={personalInfo.address}
                     onChange={handleInputChange}
                     required
