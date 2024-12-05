@@ -142,6 +142,24 @@ router.post('/apply', upload.fields([
     }
 });
 
+// Get Candidate History 
+router.get('/application/candidate/:candidateId', async (req,res) => {
+    try{
+        const {candidateId} = req.params;
+
+        const applications = await Application.find({candidateId}).populate('jobId', 'advt lastDate');
+
+        if(!applications.length){
+            return res.status(404).json({message: 'No applications for this candidate'});
+        }
+
+        res.status(200).json(applications);
+
+    }catch(e){
+        console.error('Error: ', e);
+        res.status(500).json({message: 'Internal server error'});
+    }
+})
 
 
 // Get all applications for admin

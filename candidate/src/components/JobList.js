@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
-  
+const JobList = ({ jobs, searchTerm, setSearchTerm, applications }) => {
+
   const navigate = useNavigate();
   // Group jobs by their jobType
   const groupJobsByType = (jobs) => {
@@ -17,10 +17,13 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
 
   const jobsGroupedByType = groupJobsByType(jobs);
   const handleApply = (jobId) => {
-    
-    navigate(`/apply/${jobId}`, {state: {jobId} }); // Navigate to multi-step form with jobId
+
+    navigate(`/apply/${jobId}`, { state: { jobId } }); // Navigate to multi-step form with jobId
   };
-  
+
+  const isJobApplied = (jobId) => {
+    return applications.some((application) => application.jobId._id === jobId);
+  }
 
   return (
     <div className="container mx-auto mt-6 bg-white shadow rounded p-6">
@@ -59,7 +62,7 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
                       {job.advt}
                     </div>
 
-                   
+
 
                     {/* Job Description */}
                     <p className="text-sm text-gray-600 text-center mb-4">
@@ -80,17 +83,26 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
 
                     {/* Actions */}
                     <div className="flex justify-center gap-4 mt-auto">
-                      <button
-                        className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition ${
-                          job.status === "Closed"
+                      {isJobApplied(job._id) ? (
+                        <button
+                          className="bg-gray-400 text-white py-2 px-4 rounded-lg cursor-not-allowed"
+                          disabled> Applied
+                        </button>
+                      ) : (
+
+
+                        <button
+                          className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition ${job.status === "Closed"
                             ? "bg-gray-400 cursor-not-allowed"
                             : ""
-                        }`}
-                        disabled={job.status === "Closed"}
-                        onClick={()=> handleApply(job._id)}
-                      >
-                        {job.status === "Closed" ? "Closed" : "Apply"}
-                      </button>
+                            }`}
+                          disabled={job.status === "Closed"}
+                          onClick={() => handleApply(job._id)}
+                        >
+                          {job.status === "Closed" ? "Closed" : "Apply"}
+                        </button>
+
+                      )}
                     </div>
                   </div>
                 ))}
