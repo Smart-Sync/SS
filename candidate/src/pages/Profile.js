@@ -4,7 +4,7 @@ import { useUser } from "../UserContext.js"; // Import the custom hook
 
 function Profile() {
   const { user, setUser, token } = useUser(); // Access user and token from context
-  const [username, setUsername] = useState( user?.name || "");
+  const [username, setUsername] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
   const [isEditing, setIsEditing] = useState(false);
   const [resume, setResume] = useState(null);
@@ -13,14 +13,13 @@ function Profile() {
 
   useEffect(() => {
     if (!user) {
-      // If user is not available in context, fetch it from the API
       const fetchProfile = async () => {
         try {
           setLoading(true);
           const res = await axios.get(`http://localhost:5000/api/profile`, {
             headers: { Authorization: token },
           });
-          setUser(res.data); // Update user context with fetched data
+          setUser(res.data);
           setUsername(res.data.name);
           setEmail(res.data.email);
         } catch (error) {
@@ -32,7 +31,6 @@ function Profile() {
       };
       fetchProfile();
     } else {
-      // If user is available in context, set local state
       setUsername(user.name);
       setEmail(user.email);
       setLoading(false);
@@ -46,7 +44,7 @@ function Profile() {
         return alert("Please upload a valid PDF file.");
       }
       setResume(file);
-      setResumePreview(URL.createObjectURL(file)); // Show the local preview before upload
+      setResumePreview(URL.createObjectURL(file));
     }
   };
 
@@ -64,7 +62,7 @@ function Profile() {
       const res = await axios.put(`http://localhost:5000/api/update-profile`, formData, {
         headers: { Authorization: token, "Content-Type": "multipart/form-data" },
       });
-      setUser(res.data); // Update user context after profile update
+      setUser(res.data);
       setIsEditing(false);
       alert("Profile updated successfully!");
     } catch (error) {
@@ -109,7 +107,6 @@ function Profile() {
             onChange={handleFileChange}
             className="w-full p-2 border rounded mt-2"
           />
-          {/* Local Preview in an iframe */}
           {resumePreview && (
             <iframe
               src={resumePreview}
@@ -119,7 +116,6 @@ function Profile() {
               className="border mt-4"
             />
           )}
-
           <button
             className="px-4 py-2 bg-green-500 text-white rounded"
             onClick={handleUpdateProfile}
@@ -140,6 +136,23 @@ function Profile() {
           </p>
           <p className="text-lg">
             <strong>Email:</strong> {user ? user.email : email}
+          </p>
+          <p className="text-lg">
+            <strong>Mobile:</strong> {user ? user.mobile : "Not available"}
+          </p>
+          <p className="text-lg">
+            <strong>Skills:</strong> {user ? user.skills : "Not available"}
+          </p>
+          <p className="text-lg">
+            <strong>Qualifications:</strong> {user ? user.qualifications : "Not available"}
+          </p>
+          <p className="text-lg">
+            <strong>Date of Birth:</strong>{" "}
+            {user ? new Date(user.dob).toLocaleDateString() : "Not available"}
+          </p>
+          <p className="text-lg">
+            <strong>Years of Experience:</strong>{" "}
+            {user ? user.years_of_experience : "Not available"}
           </p>
           <p className="text-lg">
             <strong>Resume:</strong>{" "}

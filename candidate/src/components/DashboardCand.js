@@ -5,10 +5,12 @@ import { useUser } from '../UserContext';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import JobListing from './JobList';
+import { useApplications } from "../ApplicationContext";
 
 const DashboardCand = () => {
   const navigate = useNavigate();
   const { user, logout } = useUser();
+  const {applications, loading, error} = useApplications();
   const [searchTerm, setSearchTerm] = useState("");
   const [jobs, setJobs] = useState([]);
 
@@ -49,8 +51,8 @@ const DashboardCand = () => {
         <div className="container mx-auto flex justify-between items-center p-4">
           <div className="text-xl font-bold">DRDO</div>
           <div className="flex items-center gap-4">
-            <Link to="/view-jobs" className="text-gray-600 hover:text-blue-600">Open Vacancies</Link>
-            <Link to="/application-history" className="text-gray-600 hover:text-blue-600">Application Hisrory</Link>
+            
+            <Link to="/application-history" className="text-gray-600 hover:text-blue-600">Application History</Link>
 
             {/* Profile Dropdown Menu */}
             <Menu as="div" className="relative">
@@ -94,7 +96,7 @@ const DashboardCand = () => {
       </header>
 
       {/* Job Listings */}
-      <JobListing jobs={jobs} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <JobListing jobs={jobs} searchTerm={searchTerm} setSearchTerm={setSearchTerm} applications ={applications}/>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
-  
+const JobList = ({ jobs, searchTerm, setSearchTerm, applications }) => {
+
   const navigate = useNavigate();
   // Group jobs by their jobType
   const groupJobsByType = (jobs) => {
@@ -14,24 +14,44 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
       return acc;
     }, {});
   };
+  const filteredJobs = jobs.filter((job) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      job.advt.toLowerCase().includes(searchLower) ||
+      job.description.toLowerCase().includes(searchLower) ||
+      job.jobType.toLowerCase().includes(searchLower)
+    );
+  });
 
-  const jobsGroupedByType = groupJobsByType(jobs);
+  const jobsGroupedByType = groupJobsByType(filteredJobs);
   const handleApply = (jobId) => {
-    navigate(`/apply/${jobId}`); // Navigate to multi-step form with jobId
+
+    navigate(`/apply/${jobId}`, { state: { jobId } }); // Navigate to multi-step form with jobId
   };
-  
+
+  const isJobApplied = (jobId) => {
+    return applications.some((application) => application.jobId._id === jobId);
+  }
 
   return (
     <div className="container mx-auto mt-6 bg-white shadow rounded p-6">
       {/* Search Input */}
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6 flex items-center relative">
         <input
           type="text"
           placeholder="Search..."
-          className="w-full border border-gray-300 rounded-lg p-2"
+          className="w-full border border-gray-300 rounded-lg p-2 pr-10"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        {searchTerm && (
+          <button
+            className="absolute right-2 top-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+            onClick={() => setSearchTerm("")}
+          >
+            &times;
+          </button>
+        )}
       </div>
 
       {/* Job Listings */}
@@ -58,7 +78,7 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
                       {job.advt}
                     </div>
 
-                   
+
 
                     {/* Job Description */}
                     <p className="text-sm text-gray-600 text-center mb-4">
@@ -79,17 +99,26 @@ const JobList = ({ jobs, searchTerm, setSearchTerm }) => {
 
                     {/* Actions */}
                     <div className="flex justify-center gap-4 mt-auto">
-                      <button
-                        className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition ${
-                          job.status === "Closed"
+                      {isJobApplied(job._id) ? (
+                        <button
+                          className="bg-gray-400 text-white py-2 px-4 rounded-lg cursor-not-allowed"
+                          disabled> Applied
+                        </button>
+                      ) : (
+
+
+                        <button
+                          className={`bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition ${job.status === "Closed"
                             ? "bg-gray-400 cursor-not-allowed"
                             : ""
-                        }`}
-                        disabled={job.status === "Closed"}
-                        onClick={()=> handleApply(job._id)}
-                      >
-                        {job.status === "Closed" ? "Closed" : "Apply"}
-                      </button>
+                            }`}
+                          disabled={job.status === "Closed"}
+                          onClick={() => handleApply(job._id)}
+                        >
+                          {job.status === "Closed" ? "Closed" : "Apply"}
+                        </button>
+
+                      )}
                     </div>
                   </div>
                 ))}

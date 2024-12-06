@@ -16,6 +16,11 @@ export const ApplyDoc = ({ formData, onNext, onPrevious }) => {
     };
 
     const handleNext = () => {
+        if (!documents.scoreCard || !documents.proofOfDob || !documents.photo || !documents.signature) {
+            alert('Please upload all required documents!');
+            return;
+        }
+
         onNext({ documents });
     };
     return (
@@ -40,7 +45,7 @@ export const ApplyDoc = ({ formData, onNext, onPrevious }) => {
             <div>
                 <label className="block mb-1 font-semibold">Photo</label>
                 <input
-                    type="image"
+                    type="file"
                     alt = "Photo"
                     onChange={(e) => handleChange('photo', e.target.files[0])}
                     className="border p-2 rounded"
@@ -49,7 +54,7 @@ export const ApplyDoc = ({ formData, onNext, onPrevious }) => {
             <div>
                 <label className="block mb-1 font-semibold">Sign</label>
                 <input
-                    type="image"
+                    type="file"
                     alt="Sign"
                     onChange={(e) => handleChange('signature', e.target.files[0])}
                     className="border p-2 rounded"
