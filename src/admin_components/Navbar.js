@@ -14,8 +14,9 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 const navigation = [
   { name: "Home", href: "/admin/homepage", current: true },
-  { name: "Create New Board", href: "/admin/newboard", current: false },
-  { name: "Modify Existing Board", href: "#", current: false },
+  { name: "Create New Job", href: "/admin/newboard", current: false }, // NewJob
+  { name: "View Jobs", href: "/admin/newboard", current: false }, // JobsPage
+  // { name: "Modify Existing Board", href: "#", current: false },
   {
     name: "View Expert Profile",
     href: "/admin/experts-profile",
