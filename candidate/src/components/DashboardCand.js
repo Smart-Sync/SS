@@ -5,10 +5,12 @@ import { useUser } from '../UserContext';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import JobListing from './JobList';
+import { useApplications } from "../ApplicationContext";
 
 const DashboardCand = () => {
   const navigate = useNavigate();
   const { user, logout } = useUser();
+  const {applications, loading, error} = useApplications();
   const [searchTerm, setSearchTerm] = useState("");
   const [jobs, setJobs] = useState([]);
 
@@ -94,7 +96,7 @@ const DashboardCand = () => {
       </header>
 
       {/* Job Listings */}
-      <JobListing jobs={jobs} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <JobListing jobs={jobs} searchTerm={searchTerm} setSearchTerm={setSearchTerm} applications ={applications}/>
     </div>
   );
 };

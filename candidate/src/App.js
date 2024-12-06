@@ -3,13 +3,13 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import {UserProvider} from './UserContext';
+import { UserProvider } from './UserContext';
+import { ApplicationProvider } from './ApplicationContext';
 import { Login } from './pages/Login';
 import Profile from './pages/Profile'
 import { Dashboard } from './pages/Dashboard';
 import HomePage from './pages/RACDashboard';
 import OpenVacancies from './components/OpenVacancies';
-import ApplicationForm from './components/ApplicationForm';
 import ApplicationStatus from './components/ApplicationStatus';
 import { JobApply } from './pages/JobApply';
 const router = createBrowserRouter([
@@ -43,11 +43,11 @@ const router = createBrowserRouter([
       <JobApply />
     ),
   },
-  
+
   {
     path: '/profile-settings',
     element: (
-      <Profile/>
+      <Profile />
     ),
   },
   {
@@ -63,7 +63,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <UserProvider>
-      <RouterProvider router={router} />
+      <ApplicationProvider>
+        <RouterProvider router={router} />
+      </ApplicationProvider>
     </UserProvider>
   );
 }
