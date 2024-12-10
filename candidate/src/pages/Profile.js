@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "../UserContext.js"; // Import the custom hook
-
+import Navbar from "../components/NavBar.js";
 function Profile() {
   const { user, setUser, token } = useUser(); // Access user and token from context
   const [username, setUsername] = useState(user?.name || "");
@@ -82,7 +82,9 @@ function Profile() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg p-6">
+    <div >
+      <Navbar/>
+      <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg p-6">
       <h1 className="text-3xl font-bold text-center mb-6">Profile</h1>
       {isEditing ? (
         <div className="space-y-4">
@@ -179,6 +181,7 @@ function Profile() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
