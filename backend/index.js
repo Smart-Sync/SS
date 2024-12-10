@@ -1,14 +1,15 @@
 const express = require('express')
 const axios = require('axios');
 const cors = require('cors');
-const saveDetails = require('./routes/SaveDetails')
 const acceptance = require('./routes/ExpertAcceptance')
 const result = require('./routes/MappingResults')
 const boards = require('./routes/Boards')
 const mail = require('./routes/SendMail')
 const eachExpert = require('./routes/EachExpert')
+const jobs = require('./routes/Jobs')
+const applications = require('./routes/Applications')
 const app = express();
-const port = 5000;
+const port = 5001;
 const mongoDB = require('./db')
 const mongoEx = require('./dbExpert')
 const FASTAPI_URL = 'http://localhost:8000';
@@ -40,13 +41,14 @@ app.use('/api', boards)
 app.use('/api', mail)
 app.use('/api', eachExpert)
 app.use('/api',require("./routes/Expert"))
+app.use('/api/jobs', jobs)
 
 app.get('/',(req,res)=>{
     res.send('Hello World');
 })
 // Add this line to include your new route
 app.use('/api', require("./routes/SaveDetails"));
-
+app.use('/api/applications', applications)
 app.use('/api',require("./routes/UserValidation"))
 // app.use('/api',require("./routes/Board"))
 app.listen(port, () => {

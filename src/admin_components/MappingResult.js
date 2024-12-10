@@ -17,7 +17,7 @@ export const MappingResult = () => {
   useEffect(() => {
     const fetchBoardDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/board-details/${id}`);
+        const response = await fetch(`http://localhost:5001/api/board-details/${id}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -54,7 +54,7 @@ export const MappingResult = () => {
         [name]: 'pending', // Set this expert's status to pending after clicking Notify
       }));
 
-      const response = await fetch("http://localhost:5000/api/send-email", {
+      const response = await fetch("http://localhost:5001/api/send-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export const MappingResult = () => {
   // Polling for updates
   const pollForUpdates = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/board-details/${id}`);
+      const response = await fetch(`http://localhost:5001/api/board-details/${id}`);
       const updatedDetails = await response.json();
 
       const updatedStatus = {};

@@ -1,23 +1,27 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 export const NewBoard = () => {
   const [reqt, setReqt] = useState('');
   const [date, setDate] = useState('');
   const [score, setScore] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
+  const { jobType, advt, lastDate } = location.state || {};  
+
+  console.log(jobType, advt)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       
-      const response = await axios.post('http://localhost:5000/api/profile-score', {
+      const response = await axios.post('http://localhost:5001/api/profile-score', {
         requirement: reqt,
       });
       setScore(response.data || {}); // Set score or default to empty object if undefined
       console.log(response.data);
 
-      const res = await axios.post('http://localhost:5000/api/save-details', {
+      const res = await axios.post('http://localhost:5001/api/save-details', {
         requirement: reqt,
         date: date,
         experts: response.data
@@ -34,15 +38,13 @@ export const NewBoard = () => {
     <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 mt-12">
       <form onSubmit={handleSubmit}>
         <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-2xl font-semibold leading-7 text-gray-900">Upload Requirements for candidate selection </h2>
-
-
+          <div className="border-b border-gray-900/10 pb-6">
+            <h2 className="text-2xl font-semibold leading-7 text-gray-900">{advt} Board Requirements </h2>
 
           </div>
 
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">Job Information</h2>
+            <h2 className="text-base text-lg font-semibold leading-7 text-gray-900">Type: {jobType}</h2>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">

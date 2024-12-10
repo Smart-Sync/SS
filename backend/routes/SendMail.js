@@ -41,12 +41,12 @@ router.post('/send-email', async (req, res) => {
   
               <!-- Accept and Decline Buttons -->
               <div style="margin-top: 30px;">
-                <a href="http://localhost:5000/api/update-response?token=${token}&response=accepted" 
+                <a href="http://localhost:5001/api/update-response?token=${token}&response=accepted" 
                    style="display: inline-block; padding: 10px 20px; background-color: #4caf50; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">
                   Accept
                 </a>
                 
-                <a href="http://localhost:5000/api/update-response?token=${token}&response=declined" 
+                <a href="http://localhost:5001/api/update-response?token=${token}&response=declined" 
                    style="display: inline-block; padding: 10px 20px; background-color: #f44336; color: white; text-decoration: none; border-radius: 5px;">
                   Decline
                 </a>

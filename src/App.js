@@ -15,6 +15,7 @@ import { LoginExpert } from './access_pages/LoginExpert';
 import { Admin } from './admin_components/Admin';
 import {ExpertProfilePage} from './expert_pages/ExpertProfilePage'
 import { EditExpertProfilePage } from './expert_pages/EditExpertProfilePage';
+import { JobList } from './admin_components/JobList';
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
   {
     path:"/admin/boards",
     element: <Admin></Admin>
+  },
+  {
+    path:"/admin/jobs",
+    element: <JobList></JobList>
   }
   
 ]);

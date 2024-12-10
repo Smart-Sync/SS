@@ -27,7 +27,7 @@ export const EditExpertProfile = () => {
     const fetchProfile = async () => {
       try {
        
-    const response = await fetch(`http://localhost:5000/api/expert/profile/${expertId}`);
+    const response = await fetch(`http://localhost:5001/api/expert/profile/${expertId}`);
     
         if (!response.ok) {
           throw new Error("Failed to fetch profile");
@@ -60,7 +60,7 @@ export const EditExpertProfile = () => {
     e.preventDefault();
   
     try {
-      const response = await fetch(`http://localhost:5000/api/expert/profile/update/${expertId}`, {
+      const response = await fetch(`http://localhost:5001/api/expert/profile/update/${expertId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

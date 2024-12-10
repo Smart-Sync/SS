@@ -15,11 +15,11 @@ export const ExpertDashboard = () => {
   useEffect(() => {
     const fetchExpertDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/expert/${expertId}`);
+        const response = await fetch(`http://localhost:5001/api/expert/${expertId}`);
         const data = await response.json();
         setExpertDetails(data);
 
-        const interviewsResponse = await fetch(`http://localhost:5000/api/expert/${data.email}/interviews`);
+        const interviewsResponse = await fetch(`http://localhost:5001/api/expert/${data.email}/interviews`);
         const interviewsData = await interviewsResponse.json();
         setUpcomingInterviews(interviewsData);
 
@@ -37,7 +37,7 @@ export const ExpertDashboard = () => {
   const updateInterviewStatus = async (token, response) => {
     try {
       // Send the update to the backend
-      await fetch(`http://localhost:5000/api/update-response?token=${token}&response=${response}`);
+      await fetch(`http://localhost:5001/api/update-response?token=${token}&response=${response}`);
   
       // Update the parent state directly (optional but recommended for better UX)
       setUpcomingInterviews((prev) =>

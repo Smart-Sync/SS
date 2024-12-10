@@ -13,7 +13,7 @@ export const Admin = () => {
     // Fetch all boards from the backend
     const fetchBoards = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/boards'); // Adjust API endpoint
+        const response = await fetch('http://localhost:5001/api/boards'); // Adjust API endpoint
         if (!response.ok) {
           throw new Error('Failed to fetch boards');
         }

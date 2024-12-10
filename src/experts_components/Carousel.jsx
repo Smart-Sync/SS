@@ -11,7 +11,7 @@ const Carousel = ({ expertDetail, onUpdateInterviewStatus }) => {
   
   const fetchInterviews = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/expert/${expertDetail.email}/interviews`);
+      const response = await fetch(`http://localhost:5001/api/expert/${expertDetail.email}/interviews`);
       const data = await response.json();
       
       setInterviews(data);

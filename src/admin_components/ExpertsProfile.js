@@ -62,7 +62,7 @@ export const ExpertsProfile = () => {
   useEffect(() => {
     const fetchExperts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/experts'); // Change to your actual API endpoint
+        const response = await axios.get('http://localhost:5001/api/experts'); // Change to your actual API endpoint
         setPeople(response.data); // Assuming the data is an array of experts
       } catch (error) {
         console.error('Error fetching experts:', error);
