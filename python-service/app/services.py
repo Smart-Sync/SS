@@ -67,6 +67,7 @@ def optimize_allocation(expert_candidate_relevancy_scores, experts_data, candida
                         }
                     allocation[expert_name]["candidates"].append({
                         "Candidate": candidate["name"],
+                        "Id": candidate["candidateId"],
                         "Relevancy Score": expert_candidate_relevancy_scores[e][candidate_ids.index(c)]["relevancy_score"]
                     })
         return allocation
