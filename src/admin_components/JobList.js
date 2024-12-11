@@ -5,6 +5,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { Navbar } from "./Navbar";
 
 export const JobList = () => {
   const [jobs, setJobs] = useState([]);
@@ -94,9 +95,11 @@ export const JobList = () => {
     }
   };
   return (
-    <div className="p-4">
+    <div >
+      <Navbar/>
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="px-16 ">
+      <div className="flex justify-between items-center mb-6 ">
         <h1 className="text-2xl font-bold">Job Positions</h1>
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -210,6 +213,7 @@ export const JobList = () => {
             No jobs found for the selected month and year.
           </p>
         )}
+      </div>
       </div>
     </div>
   );

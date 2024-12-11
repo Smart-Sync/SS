@@ -15,10 +15,11 @@ import { Link, useNavigate } from "react-router-dom";
 const navigation = [
   { name: "Home", href: "/admin/homepage", current: true },
   // { name: "Create New Job", href: "/admin/newboard", current: false }, // NewJob
-  { name: "View Jobs", href: "/admin/jobs", current: false }, // JobsPage
+  { name: " Jobs", href: "/admin/jobs", current: false }, // JobsPage
   // { name: "Modify Existing Board", href: "#", current: false },
+  {name:"Boards", href:"/admin/view-board",current:false},
   {
-    name: "View Expert Profile",
+    name: "Expert Profile",
     href: "/admin/experts-profile",
     current: false,
   },

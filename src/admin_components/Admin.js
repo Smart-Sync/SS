@@ -28,6 +28,10 @@ export const Admin = () => {
     fetchBoards();
   }, []);
 
+  // Get the current month and year
+  const currentMonth = new Date().getMonth() + 1; // Get current month (1-12)
+  const currentYear = new Date().getFullYear(); // Get current year (e.g., 2024)
+
   const sortedBoards = sortOrder === 'none'
     ? boards
     : [...boards].sort((a, b) => {
@@ -36,63 +40,54 @@ export const Admin = () => {
         return sortOrder === 'ascending' ? dateA - dateB : dateB - dateA;
       });
 
-  const filteredBoards = filterDate
-    ? sortedBoards.filter(board => {
-        const boardDate = new Date(board.date);
-        const month = String(boardDate.getMonth() + 1).padStart(2, '0'); // Ensure 2-digit month
-        const year = boardDate.getFullYear();
-        const formattedDate = `${month}-${year}`;
-        return formattedDate === filterDate;
-      })
-    : sortedBoards;
+  // Filter boards to show only those from the current month
+  const filteredBoards = sortedBoards.filter(board => {
+    const boardDate = new Date(board.date);
+    const boardMonth = boardDate.getMonth() + 1; // Get board month (1-12)
+    const boardYear = boardDate.getFullYear(); // Get board year
+
+    return boardMonth === currentMonth && boardYear === currentYear;
+  });
 
   return (
     <div className="bg-white py-4 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-16">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-indigo-600">Interview faster</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Everything to make your interview process automated
-          </p>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            DRDO candidate selection Smart Sync Application for admin to manage Candidates and Experts interview using AI and Blockchain.
-          </p>
+  <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8">
+    {/* Left Side: Text Content */}
+    <div className="max-w-2xl">
+      <h2 className="text-base font-semibold leading-7 text-indigo-600">Interview faster</h2>
+      <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        Everything to make your interview process automated
+      </p>
+      <p className="mt-6 text-lg leading-8 text-gray-600">
+        DRDO candidate selection Smart Sync Application for admin to manage Candidates and Experts interview using AI and Blockchain.
+      </p>
+    </div>
+    
+    {/* Right Side: Image */}
+    <div className="flex justify-center">
+      <img 
+        src="https://media.istockphoto.com/id/1169397243/vector/human-resources-concept-vector-illustration.jpg?s=612x612&w=0&k=20&c=IwFeMVZa7OVr65_NsHu2zhhOOWYLJj3BuTI1hdVtb7w=" 
+        alt="Interview Process Illustration" 
+        className="w-96 h-96 rounded-full mx-auto"
+      />
+    </div>
+  </div>
+</div>
+
+
+<div className="relative mb-8">
+        
+        <div className="relative flex justify-center">
+          <h2 className="bg-white px-4 text-xl font-bold text-gray-800">
+            Latest Boards
+          </h2>
         </div>
       </div>
 
-      <div className="flex mb-8 gap-4">
-        <div>
-          <label htmlFor="sortOrder" className="mr-3 ml-4 font-bold text-gray-700">Sort by Date: </label>
-          <select
-            id="sortOrder"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="px-3 py-3 rounded  border-gray-300"
-          >
-            <option value="none">None</option>
-            <option value="ascending">Ascending</option>
-            <option value="descending">Descending</option>
-          </select>
-        </div>
 
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            views={['month', 'year']}
-            label="Filter by Month and Year"
-            onChange={(newValue) => {
-              if (newValue) {
-                const formattedDate = `${newValue.format('MM')}-${newValue.format('YYYY')}`;
-                setFilterDate(formattedDate);
-              } else {
-                setFilterDate('');
-              }
-            }}
-            className="rounded border border-gray-300"
-          />
-        </LocalizationProvider>
-      </div>
 
-      <div className="board-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="board-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredBoards.length > 0 ? (
           filteredBoards.map((board) => (
             <Card key={board._id} board={board} /> // Pass each board as a prop

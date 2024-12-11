@@ -17,6 +17,7 @@ import {ExpertProfilePage} from './expert_pages/ExpertProfilePage'
 import { EditExpertProfilePage } from './expert_pages/EditExpertProfilePage';
 import { JobList } from './admin_components/JobList';
 import {EditJob} from './admin_pages/EditJob'
+import {ViewBoard} from './admin_components/ViewBoard'
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/experts-profile",
     element:  localStorage.getItem("authToken")?<ExpertsProfilePage/>:null,
+  },
+  {
+    path: "/admin/view-board",
+    element:  localStorage.getItem("authToken")?<ViewBoard/>:null,
   },
   {
     path: "/expert/homepage/:expertId",
