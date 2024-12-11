@@ -71,6 +71,7 @@ export const ExpertsProfile = () => {
 
     fetchExperts();
   }, []);
+  
   return (
     <div className=''>
       <div className='py-0 px-8'>

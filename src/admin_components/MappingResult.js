@@ -27,7 +27,7 @@ export const MappingResult = () => {
           data.experts.forEach(expert => {
             // Initialize status based on fetched data
             initialStatus[expert.name] = expert.acceptanceStatus === 'approved' ? 'approved' :
-                                         expert.acceptanceStatus === 'rejected' ? 'rejected' : 'Notify';
+              expert.acceptanceStatus === 'rejected' ? 'rejected' : 'Notify';
           });
           setStatus(initialStatus); // Set the initial status in the state
 
@@ -122,6 +122,21 @@ export const MappingResult = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const sendMails = async () => {
+    const response = await fetch("http://localhost:5001/api/candidate-interview-notif", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // expertName: name,
+        // recipientEmail: email,
+        // token: token,
+      }),
+    });
+
+  }
+  console.log(boardDetails)
   return (
     boardDetails && (
       <div className="grid-container">
@@ -134,7 +149,7 @@ export const MappingResult = () => {
                     className="mb-2 w-12 h-12"
                     sx={{ bgcolor: indigo[500] }}
                   >
-                    {expert.name.charAt(0)}
+                    {expert.name.charAt(4)}
                   </Avatar>
                   <span className="flex-1 font-semibold">{expert.name}</span>
                 </div>
@@ -150,7 +165,7 @@ export const MappingResult = () => {
                       <ul>
                         <li className="border-b pb-2 flex justify-between">
                           <span>{item.Candidate}</span>
-                          <span className="text-gray-500">
+                          <span className=" ml-4 text-gray-500">
                             {item["RelevancyScore"].toFixed(5)}
                           </span>
                         </li>
@@ -180,8 +195,15 @@ export const MappingResult = () => {
                 </div>
               </CardContent>
             </Card>
+
           </div>
         ))}
+        <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 py-3 shadow-md flex justify-center">
+          <Button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm " style={{ backgroundColor: '#3B82F6' }} onClick={sendMails()}>
+            Approve Board
+          </Button>
+        </div>
+
       </div>
     )
   );

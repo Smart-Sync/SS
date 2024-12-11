@@ -6,26 +6,26 @@ const Carousel = ({ expertDetail, onUpdateInterviewStatus }) => {
   const [filteredInterviews, setFilteredInterviews] = useState([]);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const currentExpert = expertDetail.name;
-  
+
   const fetchInterviews = async () => {
     try {
       const response = await fetch(`http://localhost:5001/api/expert/${expertDetail.email}/interviews`);
       const data = await response.json();
-      
+
       setInterviews(data);
     } catch (error) {
       console.error('Error fetching interviews:', error);
     }
   };
 
-  
+
   useEffect(() => {
     fetchInterviews();
-  }, [interviews, currentExpert]); 
+  }, [interviews, currentExpert]);
 
-  
+
   useEffect(() => {
     const filtered = interviews.filter((interview) => {
       const expert = interview.experts.find(
@@ -42,7 +42,7 @@ const Carousel = ({ expertDetail, onUpdateInterviewStatus }) => {
     setFilteredInterviews(filtered);
   }, [interviews, currentExpert]); // Re-filter when interviews or currentExpert changes
 
-  
+
   // Function to go to the next slide
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % filteredInterviews.length);
@@ -72,32 +72,36 @@ const Carousel = ({ expertDetail, onUpdateInterviewStatus }) => {
         style={{ backgroundColor: "#FEF9D9" }}
         className="relative h-56 overflow-hidden rounded-lg md:h-79 bg-red-100 shadow-md p-4"
       >
-        {filteredInterviews.map((interview, index) => (
-          <div
-            key={index}
-            className={`${
-              index === currentIndex ? "block" : "hidden"
-            } absolute block w-full h-full flex flex-col items-center justify-start py-6 duration-700 ease-in-out`}
-          >
-            <h2 className="text-xl font-bold ">{interview.requirement} Interview Board</h2>
-            <p className="w-[70%] text-center">Invitation for interview regarding {interview.requirement}</p>
-            <p className="mb-4">Date: {new Date(interview.date).toLocaleDateString("en-GB")}</p>
-            <div>
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded-md mr-5 hover:bg-green-600"
-                onClick={() => handleResponse(interview.experts[0].token, "accepted")}
-              >
-                Accept
-              </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                onClick={() => handleResponse(interview.experts[0].token, "rejected")}
-              >
-                Reject
-              </button>
+        {filteredInterviews.length > 0 ? (
+          filteredInterviews.map((interview, index) => (
+            <div
+              key={index}
+              className={`${index === currentIndex ? "block" : "hidden"
+                } absolute block w-full h-full flex flex-col items-center justify-start py-6 duration-700 ease-in-out`}
+            >
+              <h2 className="text-xl font-bold ">{interview.requirement} Interview Board</h2>
+              <p className="w-[70%] text-center">Invitation for interview regarding {interview.requirement}</p>
+              <p className="mb-4">Date: {new Date(interview.date).toLocaleDateString("en-GB")}</p>
+              <div>
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded-md mr-5 hover:bg-green-600"
+                  onClick={() => handleResponse(interview.experts[0].token, "accepted")}
+                >
+                  Accept
+                </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                  onClick={() => handleResponse(interview.experts[0].token, "rejected")}
+                >
+                  Reject
+                </button>
+              </div>
             </div>
+          ))) : (
+          <div className="flex items-center justify-center h-full text-center">
+            <p className="text-xl font-semibold text-gray-700">No new updates for now!</p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* Slider controls */}
