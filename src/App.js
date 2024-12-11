@@ -16,6 +16,7 @@ import { Admin } from './admin_components/Admin';
 import {ExpertProfilePage} from './expert_pages/ExpertProfilePage'
 import { EditExpertProfilePage } from './expert_pages/EditExpertProfilePage';
 import { JobList } from './admin_components/JobList';
+import {EditJob} from './admin_pages/EditJob'
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/newboard",
     element: localStorage.getItem("authToken")?<NewBoardPage></NewBoardPage>:null,
+  },
+  {
+    path: "/admin/update-job",
+    element: localStorage.getItem("authToken")?<EditJob></EditJob>:null,
   },
   {
     path: "/admin/schedule-boards/:id",
@@ -74,7 +79,6 @@ const router = createBrowserRouter([
     path:"/admin/jobs",
     element: <JobList></JobList>
   }
-  
 ]);
 
 function App() {
