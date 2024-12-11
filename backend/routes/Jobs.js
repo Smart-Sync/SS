@@ -32,4 +32,31 @@ router.get('/', async (req,res) => {
         res.status(500).json({message: e.message})
     }
 })
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { advt, jobType, lastDate, desc, pos, status } = req.body;
+
+    try {
+        const updatedJob = await Job.findByIdAndUpdate(
+            id,
+            {
+                advt,
+                jobType,
+                lastDate,
+                description: desc,
+                positionsAvailable: pos,
+                status,
+            },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedJob) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        res.status(200).json(updatedJob);
+    } catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+});
 module.exports = router
