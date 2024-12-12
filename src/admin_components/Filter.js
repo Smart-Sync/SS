@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Navbar } from './Navbar';
 
 export const Filter = () => {
   const [candidates, setCandidates] = useState([]);
@@ -28,7 +29,10 @@ export const Filter = () => {
   }, []);
 
   return (
+    <div>
+    <Navbar></Navbar>
     <div className="p-4">
+      
       <h1 className="text-2xl font-bold text-center mb-4">Candidates</h1>
       {/* {loading && <p className="text-gray-500 text-center">Loading candidates...</p>}
       {error && <p className="text-red-500 text-center">{error}</p>} */}
@@ -44,7 +48,7 @@ export const Filter = () => {
             className="border rounded-lg shadow-md p-4 flex flex-col items-center text-center"
           >
             <img
-              src={candidate.profilePicture || 'https://via.placeholder.com/150'} // Placeholder if no profile picture
+              src={candidate.profilePicture || `https://avatar.iran.liara.run/username?username=${candidate.name}`} // Placeholder if no profile picture
               alt={candidate.name}
               className="w-24 h-24 rounded-full mb-4"
             />
@@ -57,6 +61,7 @@ export const Filter = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };
