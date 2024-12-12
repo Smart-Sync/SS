@@ -82,19 +82,15 @@ export const Card = ({ board }) => {
       )}
 
       {/* Button */}
-      <Link to={`/admin/schedule-boards/${_id}`}>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full">
-          View Board
-        </button>
-      </Link>
-      <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full" onClick={handleSubmit}>
-          Create Mapping
-        </button>
       <Link to={`/admin/filter-candidates/${jobId}`}>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full">
           View Candidate
         </button>
         </Link>
+        <Link>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full" onClick={handleSubmit}>
+          Create Mapping
+        </button></Link>
     </div>
   );
 };

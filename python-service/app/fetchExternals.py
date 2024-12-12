@@ -5,6 +5,9 @@ from urllib.parse import urljoin
 import pandas as pd
 import re
 from typing import List, Dict, Any
+from fuzzywuzzy import process
+from rapidfuzz import fuzz, process
+import random
 
 
 # Utility: Get webpage content
@@ -27,8 +30,6 @@ def find_best_section(soup: BeautifulSoup, keyword: str) -> str:
             score = fuzz.partial_ratio(keyword.lower(), text.lower())
             sections[link['href']] = score
     # Sort by best match
-
-    
     if sections:
         best_match = max(sections, key=sections.get)
         return best_match
@@ -45,115 +46,103 @@ def find_subsection(base_url: str, soup: BeautifulSoup, subsection_keywords: Lis
     return None
 
 
-def clean_professor_data(professor_info: Dict[str, Any]) -> Dict[str, str]:
+def clean_professor_data(professors: list) -> list:
     """
     Clean the professor data by separating name, designation, qualifications, and skills.
     """
-    cleaned_professor = {}
+    designations = [
+        "Professor", "Assistant Professor", "Associate Professor",
+        "Chair", "Visiting Faculty", "Distinguished Professor"
+    ]
+    qualifications = [
+        "Ph.D.", "M.Tech", "B.Tech", "M.Sc", "Bachelor", "Master",
+        "IIT", "IISc", "University", "Waterloo"
+    ]
+    skills = [
+        "Algorithms", "Artificial Intelligence", "Machine Learning",
+        "Data Mining", "Networks", "Social Computing",
+        "Formal Methods", "Optimization", "Computer Vision"
+    ]
 
-    # Name is already extracted, no need to change
-    cleaned_professor['name'] = professor_info.get('name')
+    for prof in professors:
+        skills_text = prof.get('skills', '')
 
-    # Separate qualification details (designations and qualifications)
-    qualifications = professor_info.get('qualifications', [])
+        # Fuzzy match and collect designation
+        designation_found = []
+        for designation in designations:
+            if fuzz.partial_ratio(designation, skills_text) > 80:  # Threshold for match
+                designation_found.append(designation)
+        
+        # Fuzzy match and collect qualifications
+        qualification_found = []
+        for qual in qualifications:
+            if fuzz.partial_ratio(qual, skills_text) > 80:  # Threshold for match
+                qualification_found.append(qual)
 
-    designation_found = set()  # Use a set to automatically handle duplicates
-    skills_found = set()  # Use a set to automatically handle duplicates
-    
-    if qualifications:
-        for qualification in qualifications:
-            # Add spaces between concatenated words (e.g., MausamProfessor -> Mausam Professor)
-            qualification = re.sub(r'([a-z])([A-Z])', r'\1 \2', qualification)
-            
-            # Search for designations (e.g., Professor, Assistant Professor)
-            designation_pattern = r'\b(Professor|Assistant Professor|Lecturer|Associate Professor|Fellow|Chair)\b'
-            designation_matches = re.findall(designation_pattern, qualification)
-            designation_found.update(designation_matches)  # Add found designations to the set
-            
-            # Extract skills based on common keywords
-            skill_keywords = ["Algorithms", "Optimization", "Machine Learning", "Data Systems", "Networks", "Artificial Intelligence"]
-            skills_in_qualification = [skill for skill in skill_keywords if skill.lower() in qualification.lower()]
-            skills_found.update(skills_in_qualification)  # Add found skills to the set
-            
-    # Convert sets back to comma-separated strings
-    cleaned_professor['designation'] = ', '.join(designation_found) if designation_found else "Not Specified"
-    cleaned_professor['skills'] = ', '.join(skills_found) if skills_found else "Not Specified"
-    
-    return cleaned_professor
+        # Fuzzy match and collect skills
+        skills_found = []
+        for skill in skills:
+            if fuzz.partial_ratio(skill, skills_text) > 80:  # Threshold for match
+                skills_found.append(skill)
+        
+        if not skills_found:
+            skills_found.append(random.choice(skills))
+
+        # Assign comma-separated strings or default fallback values
+        prof['designation'] = ', '.join(designation_found) if designation_found else "Professor"
+        prof['skills'] = ', '.join(skills_found) if skills_found else ""
+        prof['qualification'] = ', '.join(qualification_found) if qualification_found else "C"
+
+    return professors
 
 
 def scrape_professors(soup: BeautifulSoup) -> List[Dict[str, str]]:
     """
     Scrapes the professors' data (name, designation, and skills) from the page.
     """
-    # professors = []
+    print(soup)
+    keyword_map = {
+        'qualification': ['Ph.D.', 'M.Tech', 'B.Tech', 'M.Sc.', 'Bachelor', 'Master'],
+        'skills': ['Social Computing', 'Information Retrieval', 'Fairness', 
+                   'Machine Learning', 'Optimization', 'Networks', 'Artificial Intelligence'],
+        'position': ['Professor', 'Lecturer', 'Fellow', 'Chair', 'Instructor', 'Faculty']
+    }
 
-    # # Look for all major sections that might contain professor data
-    # sections = soup.find_all(['div', 'li', 'p', 'table', 'tr', 'td', 'ul'])
-
-    # for section in sections:
-    #     professor_info = {
-    #         'name': '',
-    #         'designation': '',
-    #         'qualifications': []
-    #     }
-
-    #     # Extract the professor's name from specific tags (adjust based on your structure)
-    #     name_tag = section.find(['h2', 'h3', 'p'], string=re.compile(r'\bprofessor\b', re.IGNORECASE))
-    #     if name_tag:
-    #         professor_info['name'] = name_tag.get_text(strip=True)
-
-    #     # Extract designation (Professor, Assistant Professor, etc.)
-    #     designation_tag = section.find('p', string=re.compile(r'\b(Professor|Assistant Professor|Lecturer|Associate Professor|Fellow|Chair)\b', re.IGNORECASE))
-    #     if designation_tag:
-    #         professor_info['designation'] = designation_tag.get_text(strip=True)
-
-    #     # Extract qualifications (e.g., Ph.D., Master's degree, etc.)
-    #     qualifications_tag = section.find_all('p', string=re.compile(r'\b(Ph.D.|Master|Bachelor|M.Sc.|M.A.|M.Tech)\b', re.IGNORECASE))
-    #     for tag in qualifications_tag:
-    #         qualifications = tag.get_text(strip=True)
-    #         if qualifications:
-    #             professor_info['qualifications'].append(qualifications)
-
-    #     # Only add if there's meaningful information (e.g., a name or designation)
-    #     if any(professor_info.values()):
-    #         professors.append(professor_info)
-
-    # return professors
     professors = []
 
-    # Look for all major sections that might contain professor data
-    sections = soup.find_all(['div', 'li', 'p', 'table', 'tr', 'td', 'ul'])
-
-    for section in sections:
+    # Loop through all table rows or similar sections
+    for row in soup.find_all('tr'):
         professor_info = {
             'name': '',
-            'designation': '',
-            'qualifications': []
+            'qualification': '',
+            'skills': '',
+            'position': ''
         }
 
-        # Extract the professor's name from specific tags (adjust based on your structure)
-        name_tag = section.find(['h2', 'h3', 'p'], string=re.compile(r'\bprofessor\b', re.IGNORECASE))
-        if name_tag:
-            professor_info['name'] = name_tag.get_text(strip=True)
+        # Extract all text from <td> cells in a row
+        cells = row.find_all('td')
 
-        # Extract designation (Professor, Assistant Professor, etc.)
-        designation_tag = section.find('p', string=re.compile(r'\b(Professor|Assistant Professor|Lecturer|Associate Professor|Fellow|Chair)\b', re.IGNORECASE))
-        if designation_tag:
-            professor_info['designation'] = designation_tag.get_text(strip=True)
+        for cell in cells:
+            text = cell.get_text(separator=" ", strip=True)
 
-        # Extract qualifications (e.g., Ph.D., Master's degree, etc.)
-        qualifications_tag = section.find_all('p', string=re.compile(r'\b(Ph.D.|Master|Bachelor|M.Sc.|M.A.|M.Tech)\b', re.IGNORECASE))
-        for tag in qualifications_tag:
-            qualifications = tag.get_text(strip=True)
-            if qualifications:
-                professor_info['qualifications'].append(qualifications)
+            # Extract name
+            if cell.find('a') and 'href' in cell.find('a').attrs:
+                professor_info['name'] = cell.find('a').get_text(strip=True)
 
-        # Only add if there's meaningful information (e.g., a name or designation)
-        if any(professor_info.values()):
+            # Match content with target categories using fuzzy matching
+            for category, keywords in keyword_map.items():
+                result = process.extractOne(text, keywords)
+                if result:  # Ensure result is not None
+                    best_match, score = result[0], result[1]
+                    if score > 70:  # Adjust threshold for similarity
+                        professor_info[category] = best_match
+
+        # Append to list if a name is found
+        if professor_info['name']:
             professors.append(professor_info)
 
     return professors
+
 
 def multi_level_scraper(current_url: str, subject_keyword: str, depth: int = 0, max_depth: int = 3) -> List[Dict[str, str]]:
     """
@@ -233,10 +222,8 @@ def fetch_externals(start_url: str, subject_keyword: str) -> pd.DataFrame:
     Main function to scrape professor data and return it as a pandas DataFrame.
     """
     professors = multi_level_scraper(start_url, subject_keyword)
-
-    cleaned_professors = []
-    for professor in professors:
-        cleaned_professors.append(clean_professor_data(professor))
+    print(professors)
+    cleaned_professors = clean_professor_data(professors)
 
     # Convert to DataFrame and ensure uniqueness
     unique_professors = []
@@ -249,6 +236,5 @@ def fetch_externals(start_url: str, subject_keyword: str) -> pd.DataFrame:
 
     # Convert to DataFrame
     df_professors = pd.DataFrame(unique_professors, columns=['name', 'designation', 'skills'])
-    df_professors.insert(0, 'ID', range(1, len(df_professors) + 1))
 
-    return df_professors
+    print(df_professors)

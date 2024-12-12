@@ -36,7 +36,6 @@ export const NewBoard = () => {
       });
       console.log(res)
       console.log(res.data._id)
-      navigate(`/admin/schedule-boards/${res.data._id}`, { state: { score: response.data } }); // Pass the score list directly
     } catch (error) {
       console.error("Error fetching profile score", error);
       setScore({}); // Reset score on error

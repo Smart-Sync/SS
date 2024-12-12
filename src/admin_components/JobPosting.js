@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const JobPosting = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,7 @@ export const JobPosting = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  const navigate=useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -36,6 +37,7 @@ export const JobPosting = () => {
         description: "",
         positionsAvailable: "",
       });
+      navigate('/admin/jobs')
     } catch (error) {
       console.error("Error posting job:", error);
       alert("Failed to post job. Please try again.");
