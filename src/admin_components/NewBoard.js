@@ -7,27 +7,30 @@ export const NewBoard = () => {
   const [score, setScore] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
-  const { jobType, advt, lastDate } = location.state || {};  
+  const { jobType, advt, lastDate, _id } = location.state || {};  
 
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
-      const response = await axios.post('http://localhost:5001/api/profile-score', {
-        requirement: reqt,
-      });
-      setScore(response.data || {}); // Set score or default to empty object if undefined
-      console.log(response.data);
+      console.log(jobType)
+      console.log(_id)
+      // const response = await axios.post('http://localhost:5001/api/profile-score', {
+      //   requirement: reqt,
+      // });
+      // setScore(response.data || {}); // Set score or default to empty object if undefined
+      // console.log(response.data);
 
       const res = await axios.post('http://localhost:5001/api/save-details', {
         requirement: reqt,
         date: date,
-        experts: response.data
+        experts:{},
+        jobType: jobType,
+        jobId: _id
       });
-      console.log(res)
-      console.log(res.data._id)
-      navigate(`/admin/schedule-boards/${res.data._id}`, { state: { score: response.data } }); // Pass the score list directly
+      // console.log(res)
+      // console.log(res.data._id)
+      // navigate(`/admin/schedule-boards/${res.data._id}`, { state: { score: response.data } }); // Pass the score list directly
     } catch (error) {
       console.error("Error fetching profile score", error);
       setScore({}); // Reset score on error

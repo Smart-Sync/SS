@@ -18,6 +18,7 @@ const navigation = [
   { name: " Jobs", href: "/admin/jobs", current: false }, // JobsPage
   // { name: "Modify Existing Board", href: "#", current: false },
   {name:"Boards", href:"/admin/view-board",current:false},
+  {name:"Candidate", href:"/admin/candidate",current:false},
   {
     name: "Expert Profile",
     href: "/admin/experts-profile",
@@ -97,7 +98,7 @@ export const Navbar = ({ children }) => {
                     <span className="sr-only">Open user menu</span>
                     <img
                       alt=""
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      src={`https://avatar.iran.liara.run/username?username=admin}`}
                       className="h-8 w-8 rounded-full"
                     />
                   </MenuButton>

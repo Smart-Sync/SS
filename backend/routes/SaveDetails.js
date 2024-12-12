@@ -18,31 +18,33 @@ const Expert = require('../models/Expert');
 // Endpoint to save form details
 router.post('/save-details', async (req, res) => {
   try {
-    const { requirement, date, experts } = req.body;
+    const { requirement, date, experts,jobType,jobId } = req.body;
     console.log(experts)
     const expertArray = [];
-    for (const [expertName, expertDetails] of Object.entries(experts)) {
-      const token = createToken(expertName, requirement, date);
+    // for (const [expertName, expertDetails] of Object.entries(experts)) {
+    //   const token = createToken(expertName, requirement, date);
 
-      expertArray.push({
-        name: expertName,
-        email: expertDetails.email,
-        candidates: expertDetails.candidates.map(candidate => ({
-          Candidate: candidate.Candidate,
-          RelevancyScore: candidate['Relevancy Score']
-        })),
-        acceptanceStatus: expertDetails.acceptanceStatus || "pending",
-        scored: false,
-        token: token,
-      });
-    }
+    //   expertArray.push({
+    //     name: expertName,
+    //     email: expertDetails.email,
+    //     candidates: expertDetails.candidates.map(candidate => ({
+    //       Candidate: candidate.Candidate,
+    //       RelevancyScore: candidate['Relevancy Score']
+    //     })),
+    //     acceptanceStatus: expertDetails.acceptanceStatus || "pending",
+    //     scored: false,
+    //     token: token,
+    //   });
+    // }
 
     const detail = new Detail({
       requirement,
       date,
-      experts: expertArray
+      experts: {},
+      jobType,
+      jobId
     });
-
+    console.log(detail)
     const savedBoard = await detail.save();
     res.status(200).json(savedBoard);
   } catch (error) {

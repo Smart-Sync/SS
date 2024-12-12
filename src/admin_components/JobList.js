@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Navbar } from "./Navbar";
+import { Link } from "react-router-dom";
 
 export const JobList = () => {
   const [jobs, setJobs] = useState([]);
@@ -71,6 +72,7 @@ export const JobList = () => {
         jobType: job.jobType,
         advt: job.advt,
         lastDate: job.lastDate,
+        _id:job._id
       },
     });
   };
@@ -101,15 +103,12 @@ export const JobList = () => {
       <div className="px-16 ">
       <div className="flex justify-between items-center mb-6 ">
         <h1 className="text-2xl font-bold">Job Positions</h1>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          onClick={() => {
-            // Handle job creation navigation
-            console.log("Redirect to job creation page");
-          }}
+        <Link
+        to = "/admin/job-posting"
+          
         >
           Create New Job
-        </button>
+        </Link>
       </div>
 
       {/* Date Filter */}

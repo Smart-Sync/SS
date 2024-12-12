@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Job = require('../models/Jobs'); 
 
-router.post('/', async (req, res) => {
+router.post('/add', async (req, res) => {
     const {advt, jobType, lastDate, desc, pos} = req.body;
     const publishDate = Date.now();
 

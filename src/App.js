@@ -18,6 +18,10 @@ import { EditExpertProfilePage } from './expert_pages/EditExpertProfilePage';
 import { JobList } from './admin_components/JobList';
 import {EditJob} from './admin_pages/EditJob'
 import {ViewBoard} from './admin_components/ViewBoard'
+import {JobPosting} from './admin_components/JobPosting'
+import {CandidateView} from './admin_components/CandidateView'
+import { Filter } from './admin_components/Filter';
+
 
 const router = createBrowserRouter([
   {
@@ -37,8 +41,16 @@ const router = createBrowserRouter([
     element: localStorage.getItem("authToken")?<NewBoardPage></NewBoardPage>:null,
   },
   {
+    path: "/admin/job-posting",
+    element: localStorage.getItem("authToken")?<JobPosting></JobPosting>:null,
+  },
+  {
     path: "/admin/update-job",
     element: localStorage.getItem("authToken")?<EditJob></EditJob>:null,
+  },
+  {
+    path: "/admin/candidate",
+    element: localStorage.getItem("authToken")?<CandidateView></CandidateView>:null,
   },
   {
     path: "/admin/schedule-boards/:id",
@@ -83,6 +95,10 @@ const router = createBrowserRouter([
   {
     path:"/admin/jobs",
     element: <JobList></JobList>
+  },
+  {
+    path:"/admin/filter-candidates/:id",
+    element: <Filter></Filter>
   }
 ]);
 

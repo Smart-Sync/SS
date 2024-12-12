@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 // export const ExpertsProfile = () => {
 //   const [people, setPeople] = useState([]);
 
@@ -124,7 +123,7 @@ export const ExpertsProfile=({ user })=> {
       <div className="flex gap-4 mt-4 w-full justify-center">
   <a
     href={`mailto:${person.email}`}
-    className="flex justify-center items-center bg-blue-500 text-white text-sm font-semibold w-1/4 py-2 rounded hover:bg-blue-600 transition-colors"
+    className="flex justify-center items-center bg-blue-500 text-white text-sm font-semibold w-1/4 py-2 rounded hover:bg-blue-600 transition-colors startIcon={<EmailIcon />}"
   >
     Email
   </a>
