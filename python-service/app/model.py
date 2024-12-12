@@ -8,7 +8,7 @@ import joblib
 # Load the pre-trained Sentence-BERT model once
 sentence_model = SentenceTransformer('bert-base-nli-mean-tokens')
 
-relevancy_model = joblib.load('G:/Tanvi/Web-Dev/smart-sync/python-service/app/relevancy_model.pkl')
+relevancy_model = joblib.load('C:/Users/LENOVO/Documents/GitHub/SS/python-service/app/relevancy_model.pkl')
 
 # Function to get sentence embeddings
 def get_embeddings(text_list):

@@ -57,7 +57,10 @@ def optimize_allocation(expert_candidate_relevancy_scores, experts_data, candida
                     candidate = next(candidate for candidate in candidates_data if candidate["ID"] == c)
                     expert = next(expert for expert in experts_data if expert["ID"] == e)
                     expert_name = expert["name"]
-                    expert_email = expert["email"]
+                    expert_email = ""
+                    if expert["email"]:
+                        expert_email=expert["email"]
+
                     if expert_name not in allocation:
                         allocation[expert_name] = {
                             "email": expert_email,
@@ -67,7 +70,7 @@ def optimize_allocation(expert_candidate_relevancy_scores, experts_data, candida
                         }
                     allocation[expert_name]["candidates"].append({
                         "Candidate": candidate["name"],
-                        "Id": candidate["candidateId"],
+                        "Id": candidate["ID"],
                         "Relevancy Score": expert_candidate_relevancy_scores[e][candidate_ids.index(c)]["relevancy_score"]
                     })
         return allocation

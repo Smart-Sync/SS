@@ -6,10 +6,6 @@ const ApplicationSchema = new mongoose.Schema({
     ref: 'Job',
     required: true,
   },
-  ID:{
-    type: String,
-    required: true
-  },
   candidateId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Candidate',
@@ -31,11 +27,5 @@ const ApplicationSchema = new mongoose.Schema({
   },
   status: { type: String, default: 'Pending' }, // Pending, Accepted, Rejected
   appliedAt: { type: Date, default: Date.now },
-});
-ApplicationSchema.pre('save', function (next) {
-  if (this.jobId) {
-    this.ID = this.jobId.toString();
-  }
-  next();
 });
 module.exports = mongoose.model('Application', ApplicationSchema);

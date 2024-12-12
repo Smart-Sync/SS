@@ -8,6 +8,7 @@ app.use(express.json());
 const acceptance = require('./routes/ExpertAcceptance')
 const result = require('./routes/MappingResults')
 const boards = require('./routes/Boards')
+const board = require('./routes/Board')
 const mail = require('./routes/SendMail')
 const candidateMail = require('./routes/UpdateCandidate')
 const eachExpert = require('./routes/EachExpert')
@@ -26,15 +27,22 @@ mongoEx();
 // API route to get profile score from FastAPI
 app.post('/api/profile-score', async (req, res) => {
     try {
-        const { requirement } = req.body;
-        console.log("calling api/match")
+        const { requirement, candidates } = req.body; // Extract data from request body
+        console.log("Payload received:", { requirement, candidates });
+
+        // Prepare payload for FastAPI
+        const payload = { requirement };
+        if (candidates && Array.isArray(candidates) && candidates.length > 0) {
+            payload.candidates = candidates; // Include candidates only if provided
+        }
+
         // Send request to FastAPI service
-        const response = await axios.post(`${FASTAPI_URL}/compute_profile_score/`, {
-                requirement
-        });
-        console.log("Yes")
-        res.json(response.data.results);
+        const response = await axios.post(`${FASTAPI_URL}/compute_profile_score/`, payload);
+        console.log("FastAPI Response:", response.data);
+
+        res.json(response.data); // Forward response to client
     } catch (error) {
+        console.error('Error in /api/profile-score:', error);
         res.status(500).json({ error: 'Error connecting to FastAPI service' });
     }
 });
@@ -48,6 +56,7 @@ app.use('/api', eachExpert)
 app.use('/api',candidates)
 app.use('/api',require("./routes/Expert"))
 app.use('/api/jobs', jobs)
+app.use('/api', board)
 
 app.get('/',(req,res)=>{
     res.send('Hello World');

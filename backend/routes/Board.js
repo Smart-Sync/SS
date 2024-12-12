@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const Board = require("../models/Board");
+const Detail = require("../models/Detail");
 // Submit Form
 router.post('/requirements', async (req, res) => {
     try {
-      const newRequirement = new Board(req.body);
+      console.log("In nnnn")
+      const newRequirement = new Detail(req.body);
       await newRequirement.save();
       res.status(201).json(newRequirement);
     } catch (error) {

@@ -8,11 +8,11 @@ from bson import ObjectId
 from app.services import optimize_allocation
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import List, Optional
 from fastapi.responses import JSONResponse
-
+from .fetchExternals import fetch_externals
 
 app = FastAPI()
-board_details={"subject":"AI ML"}
 
 def objectid_to_str(data):
     """Recursively convert ObjectId to string."""
@@ -34,6 +34,7 @@ def objectid_to_str(data):
 # Request body for the candidates and experts
 class MatchingRequest(BaseModel):
     requirement: str
+    candidates: Optional[List[dict]] = None
 
 @app.get("/")
 def read_root():
@@ -42,9 +43,15 @@ def read_root():
 # # Endpoint to compute the similarity between expert and candidate skills
 @app.post("/compute_profile_score/")
 def compute_profile_score(request: MatchingRequest):
-    candidates = get_candidates()
+    print(request)
+    if request.candidates:
+        candidates = request.candidates
+        print("********",candidates)
+    else:
+        print("not in")
+        candidates = get_candidates()
     candidate_df = pd.DataFrame(candidates)
-    board_embedding = sentence_model.encode([board_details['subject']]).tolist()
+    board_embedding = sentence_model.encode([request.requirement]).tolist()
     candidate_embeddings = sentence_model.encode(candidate_df['skills'].tolist()).tolist()
     candidate_board_matching_scores = compute_matching_score(candidate_embeddings, board_embedding).flatten()
     candidate_matching_dict = {
@@ -61,9 +68,10 @@ def compute_profile_score(request: MatchingRequest):
     top_x = 5
     top_candidates = ranked_candidates[:top_x]
     print(top_candidates)
-
+    # expert_df=fetch_externals("https://www.iitd.ac.in/",request.requirement)
     experts = get_experts()
     expert_df = pd.DataFrame(experts)
+    print(expert_df)
     experts_embeddings = get_embeddings(expert_df['skills'].tolist()).tolist()
 
     # Calculate semantic similarity

@@ -1,15 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export const Card = ({ board }) => {
-  const { requirement, date, _id } = board;
+  const { requirement, date, _id, jobId} = board;
   const newD = new Date(date);
   const formatted = newD.toLocaleDateString('en-GB');
+  const navigate = useNavigate();
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Step 1: Fetch candidates for the particular job
+      const candidateResponse = await axios.get(`http://localhost:5001/api/candidates/${jobId}`);
+      const candidates = candidateResponse.data.candidates; // Assuming the response is a list of candidates
+      console.log('candidates:', candidates);
+
+      // Step 2: Call profile-score API with fetched candidates
+      const response = await axios.post('http://localhost:5001/api/profile-score', {
+        requirement,
+        candidates,
+      });
+      console.log('Profile Score Response:', response.data);
+
+      const res = await axios.post('http://localhost:5001/api/save-details', {
+        requirement: requirement,
+        date: date,
+        experts:response.data.results,
+        jobType: "Senior Scientist",
+        jobId: _id
+      });
+      console.log(res)
+      console.log(res.data._id)
+      navigate(`/admin/schedule-boards/${res.data._id}`, { state: { score: response.data } }); // Pass the score list directly
+    } catch (error) {
+      console.error("Error fetching profile score", error);
+    }
+  };
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -24,7 +54,7 @@ export const Card = ({ board }) => {
     };
 
     fetchDetails();
-  }, [_id]); // Dependency array to ensure it runs only when `_id` changes
+  }, []); // Dependency array to ensure it runs only when `_id` changes
 
   return (
     <div className="border rounded-lg p-4 flex flex-col items-center text-center shadow-md space-y-4">
@@ -57,7 +87,10 @@ export const Card = ({ board }) => {
           View Board
         </button>
       </Link>
-      <Link to={`/admin/filter-candidates/${_id}`}>
+      <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full" onClick={handleSubmit}>
+          Create Mapping
+        </button>
+      <Link to={`/admin/filter-candidates/${jobId}`}>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full">
           View Candidate
         </button>

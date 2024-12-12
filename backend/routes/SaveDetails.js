@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Detail = require('../models/Detail'); // Import your save details controller
+const MappingDetail = require('../models/MappingBoard'); // Import your save details controller
 const crypto = require('crypto')
 
 
@@ -21,26 +21,26 @@ router.post('/save-details', async (req, res) => {
     const { requirement, date, experts,jobType,jobId } = req.body;
     console.log(experts)
     const expertArray = [];
-    // for (const [expertName, expertDetails] of Object.entries(experts)) {
-    //   const token = createToken(expertName, requirement, date);
+    for (const [expertName, expertDetails] of Object.entries(experts)) {
+      const token = createToken(expertName, requirement, date);
 
-    //   expertArray.push({
-    //     name: expertName,
-    //     email: expertDetails.email,
-    //     candidates: expertDetails.candidates.map(candidate => ({
-    //       Candidate: candidate.Candidate,
-    //       RelevancyScore: candidate['Relevancy Score']
-    //     })),
-    //     acceptanceStatus: expertDetails.acceptanceStatus || "pending",
-    //     scored: false,
-    //     token: token,
-    //   });
-    // }
+      expertArray.push({
+        name: expertName,
+        email: expertDetails.email,
+        candidates: expertDetails.candidates.map(candidate => ({
+          Candidate: candidate.Candidate,
+          RelevancyScore: candidate['Relevancy Score']
+        })),
+        acceptanceStatus: expertDetails.acceptanceStatus || "pending",
+        scored: false,
+        token: token,
+      });
+    }
 
-    const detail = new Detail({
+    const detail = new MappingDetail({
       requirement,
       date,
-      experts: {},
+      experts:expertArray,
       jobType,
       jobId
     });
@@ -56,7 +56,7 @@ router.post('/save-details', async (req, res) => {
 router.get('/details', async (req, res) => {
   try {
     // Fetch all details from the database
-    const details = await Detail.find();
+    const details = await MappingDetail.find();
 
     // Respond with the fetched details
     res.status(200).json(details);

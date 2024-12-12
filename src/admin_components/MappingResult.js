@@ -15,9 +15,9 @@ export const MappingResult = () => {
 
   // Fetch board details on component mount
   useEffect(() => {
-    const fetchBoardDetails = async () => {
+    const fetchMappingBoardDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/board-details/${id}`);
+        const response = await fetch(`http://localhost:5001/api/mapping-board-details/${id}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -43,8 +43,8 @@ export const MappingResult = () => {
       }
     };
 
-    fetchBoardDetails();
-  }, [id]);
+    fetchMappingBoardDetails();
+  }, []);
 
   // Function to notify expert (upon button click)
   const notifyExpert = async (name, email, token) => {

@@ -15,22 +15,28 @@ export const NewBoard = () => {
     try {
       console.log(jobType)
       console.log(_id)
-      // const response = await axios.post('http://localhost:5001/api/profile-score', {
-      //   requirement: reqt,
-      // });
-      // setScore(response.data || {}); // Set score or default to empty object if undefined
-      // console.log(response.data);
+      const savedresponse = await axios.post('http://localhost:5001/api/requirements', {
+        requirement: reqt,
+        date:date,
+        jobType:jobType,
+        jobId:_id
+      });
+      const response = await axios.post('http://localhost:5001/api/profile-score', {
+        requirement: reqt,
+      });
+      setScore(response.data || {}); // Set score or default to empty object if undefined
+      console.log(response.data);
 
       const res = await axios.post('http://localhost:5001/api/save-details', {
         requirement: reqt,
         date: date,
-        experts:{},
+        experts:response.data.results,
         jobType: jobType,
         jobId: _id
       });
-      // console.log(res)
-      // console.log(res.data._id)
-      // navigate(`/admin/schedule-boards/${res.data._id}`, { state: { score: response.data } }); // Pass the score list directly
+      console.log(res)
+      console.log(res.data._id)
+      navigate(`/admin/schedule-boards/${res.data._id}`, { state: { score: response.data } }); // Pass the score list directly
     } catch (error) {
       console.error("Error fetching profile score", error);
       setScore({}); // Reset score on error
