@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { Children, createContext, useContext, useEffect, useState } from 'react'
+import React, { children, createContext, useContext, useEffect, useState } from 'react'
 import { useUser } from "./UserContext";
 
 const ApplicationContext = createContext();
@@ -15,6 +15,7 @@ export const ApplicationProvider = ({children}) => {
     useEffect(() => {
         const fetchApplications = async () => {
             try {
+                console.log(typeof(user._id))
                 const response = await axios.get(`http://localhost:5000/api/application/candidate/${user._id}`);
                 setApplications(response.data);
                 setLoading(false);
@@ -23,10 +24,10 @@ export const ApplicationProvider = ({children}) => {
                 setLoading(false);
             }
         };
-        if(user._id){
+        if(user && user._id){
             fetchApplications();
         }
-    }, [user._id]);
+    }, [user]);
 
     return (
         <ApplicationContext.Provider value={{applications, loading, error}}>

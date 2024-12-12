@@ -1,73 +1,68 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 export const ApplyDoc = ({ formData, onNext, onPrevious }) => {
+  const [documents, setDocuments] = useState(
+    formData.documents || {
+      scoreCard: '',
+      proofOfDob: '',
+    }
+  );
 
-    const [documents, setDocuments] = useState(formData.documents || {
-        scoreCard: '',
-        proofOfDob: '',
-        photo: '',
-        signature: '',
-    });
-    const handleChange = (field, value) => {
-        setDocuments((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
-    };
+  const handleChange = (field, value) => {
+    setDocuments((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-    const handleNext = () => {
-        if (!documents.scoreCard || !documents.proofOfDob || !documents.photo || !documents.signature) {
-            alert('Please upload all required documents!');
-            return;
-        }
+  const handleNext = () => {
+    if (!documents.scoreCard || !documents.proofOfDob) {
+      alert('Please upload all required documents!');
+      return;
+    }
 
-        onNext({ documents });
-    };
-    return (
-        <div>
-            <h2 className="text-xl font-bold mb-4">Upload Documents</h2>
-            <div>
-                <label className="block mb-1 font-semibold">GATE Score Card</label>
-                <input
-                    type="file"
-                    onChange={(e) => handleChange('scoreCard', e.target.files[0])}
-                    className="border p-2 rounded"
-                />
-            </div>
-            <div>
-                <label className="block mb-1 font-semibold">Proof of DOB</label>
-                <input
-                    type="file"
-                    onChange={(e) => handleChange('proofOfDob', e.target.files[0])}
-                    className="border p-2 rounded"
-                />
-            </div>
-            <div>
-                <label className="block mb-1 font-semibold">Photo</label>
-                <input
-                    type="file"
-                    alt = "Photo"
-                    onChange={(e) => handleChange('photo', e.target.files[0])}
-                    className="border p-2 rounded"
-                />
-            </div>
-            <div>
-                <label className="block mb-1 font-semibold">Sign</label>
-                <input
-                    type="file"
-                    alt="Sign"
-                    onChange={(e) => handleChange('signature', e.target.files[0])}
-                    className="border p-2 rounded"
-                />
-            </div>
-            <div className="mt-4">
-                <button onClick={onPrevious} className="bg-gray-400 text-white p-2 rounded mr-2">
-                    Previous
-                </button>
-                <button onClick={handleNext} className="bg-blue-500 text-white p-2 rounded">
-                    Next
-                </button>
-            </div>
-        </div>
-    )
-}
+    onNext({ documents });
+  };
+
+  return (
+    <div className="p-6 bg-white shadow-md rounded-md max-w-2xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center">Upload Documents</h2>
+
+      {/* GATE Score Card */}
+      <div className="mb-4">
+        <label className="block mb-2 font-medium">GATE Score Card</label>
+        <input
+          type="file"
+          onChange={(e) => handleChange('scoreCard', e.target.files[0])}
+          className="block w-full border border-gray-300 p-3 rounded"
+        />
+      </div>
+
+      {/* Proof of DOB */}
+      <div className="mb-4">
+        <label className="block mb-2 font-medium">Proof of Date of Birth</label>
+        <input
+          type="file"
+          onChange={(e) => handleChange('proofOfDob', e.target.files[0])}
+          className="block w-full border border-gray-300 p-3 rounded"
+        />
+      </div>
+
+      {/* Navigation Buttons */}
+      <div className="mt-6 flex justify-between">
+        <button
+          onClick={onPrevious}
+          className="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500"
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNext}
+          className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};

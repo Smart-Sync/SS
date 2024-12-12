@@ -31,15 +31,15 @@ export const JobApply = () => {
         switch (currentStep) {
             case 1:
                 return <ApplyReg formData={formData} onNext={handleNext} />;
+            // case 2:
+            //     return (
+            //         <ApplyQualif
+            //             formData={formData}
+            //             onNext={handleNext}
+            //             onPrevious={handlePrevious}
+            //         />
+            //     );
             case 2:
-                return (
-                    <ApplyQualif
-                        formData={formData}
-                        onNext={handleNext}
-                        onPrevious={handlePrevious}
-                    />
-                );
-            case 3:
                 return (
                     <ApplyDoc
                         formData={formData}
@@ -47,7 +47,7 @@ export const JobApply = () => {
                         onPrevious={handlePrevious}
                     />
                 );
-            case 4:
+            case 3:
                 return (
                     <ApplyFinal
                         formData={formData}
@@ -61,7 +61,7 @@ export const JobApply = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 p-4">
-            <h1 className="text-2xl font-bold mb-4">Application Form - Step {currentStep}</h1>
+            <h1 className="text-center text-2xl font-bold mb-4">Application Form - Step {currentStep}</h1>
             {renderStep()}
         </div>
     )

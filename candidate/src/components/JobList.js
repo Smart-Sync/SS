@@ -30,7 +30,7 @@ const JobList = ({ jobs, searchTerm, setSearchTerm, applications }) => {
   };
 
   const isJobApplied = (jobId) => {
-    return applications.some((application) => application.jobId._id === jobId);
+    return applications.some((application) => application.jobId === jobId);
   }
 
   return (

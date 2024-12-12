@@ -15,7 +15,6 @@ export const UserProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
   const [token, setToken] = useState(localStorage.getItem('token') || null);
-
   
   const login = (userData, authToken) => {
     localStorage.setItem('token', authToken);

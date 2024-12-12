@@ -15,14 +15,11 @@ if (!fs.existsSync(uploadDirectory)) {
     fs.mkdirSync(uploadDirectory);
 }
 
-
 cloudinary.config({
     cloud_name: 'dfuvqlev7',
     api_key: '787693751926713',
     api_secret: 'hI6AzPCC2AlSnywBz1iUC31inCM',
-})
-
-
+});
 
 // Multer setup for file uploads
 const storage = multer.diskStorage({
@@ -36,7 +33,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage,
     fileFilter: (req, file, cb) => {
-        const allowedTypes = ['application/pdf', , 'image/jpeg', 'image/png', 'image/jpg'];
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
         if (!allowedTypes.includes(file.mimetype)) {
             return cb(new Error('Invalid file type.'));
         }
@@ -45,7 +42,6 @@ const upload = multer({
 });
 
 // ----Application Submit---- 
-
 router.post('/apply', upload.fields([
     { name: 'scoreCard', maxCount: 1 },
     { name: 'proofOfDob', maxCount: 1 },
@@ -53,114 +49,100 @@ router.post('/apply', upload.fields([
     { name: 'signature', maxCount: 1 },
 ]), async (req, res) => {
     try {
-
         const { jobId, candidateId, personalInfo, qualifications } = req.body;
 
-        
+        // Check if personalInfo is provided in the request
+        if (!personalInfo || !personalInfo.dob || !personalInfo.mobile || !personalInfo.address) {
+            return res.status(400).json({ message: 'Personal information is incomplete or missing.' });
+        }
+
+        // Default qualifications data (in case frontend didn't send them)
         const qualificationsFormatted = {
-            gateScore: parseInt(qualifications.gateScore),
-            highSchool: parseInt(qualifications.highSchool),
-            higherSecondary: parseInt(qualifications.higherSecondary),
-            degree: qualifications.degree,
-            skills: Array.isArray(qualifications.skills)
-                ? qualifications.skills // If it's already an array, use it
-                : JSON.parse(qualifications.skills || '[]'),
-            experienceYears: parseInt(qualifications.experienceYears),
+            gateScore: qualifications?.gateScore || 0, // Default GATE score
+            highSchool: qualifications?.highSchool || 0, // Default High School score
+            higherSecondary: qualifications?.higherSecondary || 0, // Default Higher Secondary score
+            degree: qualifications?.degree || 'N/A', // Default Degree
+            skills: qualifications?.skills ? JSON.parse(qualifications.skills) : [], // Empty skills array if not provided
+            experienceYears: qualifications?.experienceYears || 0, // Default experience years
         };
 
-
+        // Format personalInfo
         const personalInfoFormatted = {
             dob: new Date(personalInfo.dob),
             mobile: parseInt(personalInfo.mobile),
             address: personalInfo.address,
         };
 
+        // Process files
         const fileUrls = {};
         const files = ['scoreCard', 'proofOfDob', 'photo', 'signature'];
 
-        //Upload files to Cloudinary and store URLs
+        // Upload files to Cloudinary if they are present
         for (const field of files) {
             const file = req.files[field]?.[0];
             if (file) {
-                const resourceType = file.mimetype.startsWith('image/') ? 'image' : 'raw'; // Determine resource type
-                const result = await cloudinary.uploader.upload(file.path, { resource_type: resourceType }, (error, result) => {
-                    if (error) {
-                        console.error('Cloudinary upload error:', error);
-                        return res.status(500).json({ message: 'File upload failed' });
-                    }
-                    fileUrls[field] = result.secure_url;
-                });
+                const result = await cloudinary.uploader.upload(file.path, { resource_type: 'auto' });
+                fileUrls[field] = result.secure_url;
                 fs.unlinkSync(file.path); // Cleanup local file
             }
         }
-        const jobObjectId = new ObjectId(jobId);
-        const candidateObjectId = new ObjectId(candidateId);
 
-        // After uploading files, create the Application record
+        // If no photo or signature files were uploaded, check if URLs were provided from frontend
+        const photo = req.body.photo || fileUrls.photo || ''; // Take the photo URL from frontend or cloudinary result
+        const signature = req.body.signature || fileUrls.signature || ''; // Take the signature URL from frontend or cloudinary result
+
+        // Create Application
         const application = new Application({
-            jobId: jobObjectId,
-            candidateId: candidateObjectId,
-            qualifications: qualificationsFormatted,
-            documents: fileUrls, // Store the Cloudinary URLs
+            jobId: new ObjectId(jobId),
+            candidateId: new ObjectId(candidateId),
+            documents: {
+                scoreCard: fileUrls.scoreCard || '',
+                proofOfDob: fileUrls.proofOfDob || '',
+                photo: photo, // Use photo URL or Cloudinary upload
+                signature: signature, // Use signature URL or Cloudinary upload
+            },
+            personalInfo: personalInfoFormatted,
+            qualifications: qualificationsFormatted, // Attach default qualifications
             appliedAt: Date.now(),
         });
 
-        // Save the application
+        // Save application
         const savedApplication = await application.save();
 
-        // Update the Candidate's applications field (Reference to the Application)
-        await Candidate.findByIdAndUpdate(candidateObjectId, {
+        // Update Candidate and Job records
+        await Candidate.findByIdAndUpdate(candidateId, {
             $push: { applications: savedApplication._id },
-            $set: {
-                dob: personalInfoFormatted.dob,
-                mobile: personalInfoFormatted.mobile,
-                address: personalInfoFormatted.address,
-            },
+            $set: personalInfoFormatted,
         });
 
-        // Update the Job's applications
-        await Jobs.findByIdAndUpdate(jobObjectId, {
+        await Jobs.findByIdAndUpdate(jobId, {
             $push: { applications: savedApplication._id },
         });
 
-        // Respond with a success message
-        res.status(200).json({ message: 'Application submitted successfully' });
-
+        res.status(200).json({ message: 'Application submitted successfully.' });
     } catch (error) {
         console.error('Error submitting application:', error);
-        // Cleanup files in case of error
-        if (req.files) {
-            Object.values(req.files).forEach(fieldFiles => {
-                fieldFiles.forEach(file => {
-                    if (file.path && fs.existsSync(file.path)) {
-                        fs.unlinkSync(file.path);
-                    }
-                });
-            });
-        }
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Internal server error.' });
     }
 });
 
 // Get Candidate History 
-router.get('/application/candidate/:candidateId', async (req,res) => {
-    try{
-        const {candidateId} = req.params;
+router.get('/application/candidate/:candidateId', async (req, res) => {
+    try {
+        const { candidateId } = req.params;
 
-        const applications = await Application.find({candidateId}).populate('jobId', 'advt lastDate');
-
-        if(!applications.length){
-            return res.status(404).json({message: 'No applications for this candidate'});
+        const applications = await Application.find({ candidateId }).populate('jobId', 'advt lastDate');
+        if (!applications.length) {
+            return res.status(404).json({ message: 'No applications for this candidate' });
         }
 
         res.status(200).json(applications);
 
-    }catch(e){
+    } catch (e) {
         console.error('Error: ', e);
-        res.status(500).json({message: 'Internal server error'});
+        res.status(500).json({ message: 'Internal server error' });
     }
-})
-
+});
 
 // Get all applications for admin
 router.get('/application', async (req, res) => {
