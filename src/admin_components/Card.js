@@ -82,6 +82,7 @@ export const Card = ({ board }) => {
       )}
 
       {/* Button */}
+      <div className="flex flex-col gap-2">
       <Link to={`/admin/filter-candidates/${jobId}`}>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full">
           View Candidate
@@ -91,6 +92,7 @@ export const Card = ({ board }) => {
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full" onClick={handleSubmit}>
           Create Mapping
         </button></Link>
+        </div>
     </div>
   );
 };
